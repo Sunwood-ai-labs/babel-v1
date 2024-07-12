@@ -14,14 +14,12 @@ export default function HomePage() {
   const sidebarComponents = {
     'システム開発': [
       { name: 'VersionControl', displayName: '開発エディタ', icon: <GitBranch size={18} />, isActive: true },
-      { name: 'ChatInterface', displayName: 'チャットインターフェース', icon: <MessageSquare size={18} />, isActive: true },
       { name: 'SaaSList', displayName: 'システムリスト', icon: <Cloud size={18} />, isActive: true },
       { name: 'PackageList', displayName: 'アーティファクト', icon: <Package size={18} />, isActive: true },
-      // { name: 'MonacoEditor', displayName: 'コードエディタ', icon: <Code size={18} />, isActive: false },
     ],
-    // 'コミュニケーション': [
-    // ],
-    // '統合開発環境（IDE）': [],
+    'コミュニケーション': [
+      { name: 'ChatInterface', displayName: 'チャットインターフェース', icon: <MessageSquare size={18} />, isActive: true },
+    ],
   };
 
   const toggleSidebar = () => {
@@ -47,14 +45,14 @@ export default function HomePage() {
               <p className="text-3xl font-light mb-16 animate-fade-in-up text-amber-100" style={{fontFamily: 'Noto Serif JP, serif'}}>
                 言語を超え、文化をつなぐ。新たな世界の創造へ。
               </p>
-              {/* <div className="flex justify-center space-x-8 animate-fade-in">
-                <button className="bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold py-4 px-8 rounded-full transition duration-300 ease-in-out transform hover:scale-105 text-xl" style={{fontFamily: 'Noto Sans JP, sans-serif'}}>
+              <div className="flex justify-center space-x-8 animate-fade-in">
+                <a href="https://github.com/dai-motoki/babel-v1" target="_blank" rel="noopener noreferrer" className="bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold py-4 px-8 rounded-full transition duration-300 ease-in-out transform hover:scale-105 text-xl inline-block" style={{fontFamily: 'Noto Sans JP, sans-serif'}}>
                   塔を建設する
-                </button>
+                </a>
                 <button className="bg-transparent border-2 border-amber-400 hover:bg-amber-400 hover:text-gray-900 text-amber-400 font-bold py-4 px-8 rounded-full transition duration-300 ease-in-out transform hover:scale-105 text-xl" style={{fontFamily: 'Noto Sans JP, sans-serif'}}>
                   青写真を見る
                 </button>
-              </div> */}
+              </div>
             </div>
           </header>
 
@@ -76,9 +74,9 @@ export default function HomePage() {
                           </div>
                           <h3 className="text-2xl font-semibold text-amber-300" style={{fontFamily: 'Noto Sans JP, sans-serif'}}>{t(item.displayName)}</h3>
                         </div>
-                        <p className="text-amber-100 mb-6" style={{fontFamily: 'Noto Sans JP, sans-serif'}}>
+                        {/* <p className="text-amber-100 mb-6" style={{fontFamily: 'Noto Sans JP, sans-serif'}}>
                           {t(`${item.name}Description`)}
-                        </p>
+                        </p> */}
                         <button className="text-amber-400 hover:text-amber-300 transition-colors duration-200" style={{fontFamily: 'Noto Sans JP, sans-serif'}}>
                           詳細を見る →
                         </button>
