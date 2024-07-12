@@ -406,7 +406,8 @@ async def get_generated_dirs():
         app_dirs = []
         for item in structure:
             if item["type"] == "folder":
-                frontend_path = os.path.join(item["path"], "frontend", "App.js")
+                # frontend_path = os.path.join(item["path"], "frontend", "App.js")
+                frontend_path = os.path.join(item["path"])
                 full_path = os.path.join(base_path, frontend_path)
                 logger.debug(f"フロントエンドパスを確認中: {full_path}")
                 if os.path.exists(full_path):
