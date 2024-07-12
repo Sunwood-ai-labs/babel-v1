@@ -15,7 +15,7 @@ export default function HomePage() {
     'システム開発': [
       { name: 'VersionControl', displayName: '開発エディタ', icon: <GitBranch size={18} />, isActive: true },
       { name: 'ChatInterface', displayName: 'チャットインターフェース', icon: <MessageSquare size={18} />, isActive: true },
-      // { name: 'SaaSList', displayName: 'システムリスト', icon: <Cloud size={18} />, isActive: true },
+      { name: 'SaaSList', displayName: 'システムリスト', icon: <Cloud size={18} />, isActive: true },
       { name: 'PackageList', displayName: 'アーティファクト', icon: <Package size={18} />, isActive: true },
       // { name: 'MonacoEditor', displayName: 'コードエディタ', icon: <Code size={18} />, isActive: false },
     ],
