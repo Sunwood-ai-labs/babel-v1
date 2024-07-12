@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>菓匠 鈴乃家 - 伝統と革新の和菓子</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'matcha': '#006400',
+                        'sakura': '#FFB7C5',
+                        'yokan': '#4A2311',
+                        'washi': '#F3EAD3',
+                    },
+                    fontFamily: {
+                        'mincho': ['Yu Mincho', 'serif'],
+                        'gothic': ['Yu Gothic', 'sans-serif'],
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap');
+        .font-mincho { font-family: 'Noto Serif JP', serif; }
+        .font-gothic { font-family: 'Noto Sans JP', sans-serif; }
+    </style>
+</head>
+<body class="bg-washi text-yokan font-gothic">
+    <header class="bg-matcha text-white py-4 shadow-md">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <h1 class="text-2xl font-mincho font-bold">菓匠 鈴乃家</h1>
+            <nav>
+                <ul class="flex space-x-4">
+                    <li><a href="#" class="hover:text-sakura transition duration-300">ホーム</a></li>
+                    <li><a href="#" class="hover:text-sakura transition duration-300">商品一覧</a></li>
+                    <li><a href="#" class="hover:text-sakura transition duration-300">店舗情報</a></li>
+                    <li><a href="#" class="hover:text-sakura transition duration-300">お問い合わせ</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <section class="mb-12">
+            <h2 class="text-3xl font-mincho font-bold mb-4">季節の和菓子</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white rounded-lg shadow-md overflow-hidden transition duration-300 transform hover:scale-105">
+                    <img src="https://via.placeholder.com/400x300" alt="季節の和菓子" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-mincho font-bold text-xl mb-2">桜餅</h3>
+                        <p class="text-sm mb-4">春の訪れを告げる、桜の葉の香り豊かな一品。</p>
+                        <button class="bg-matcha text-white py-2 px-4 rounded hover:bg-opacity-90 transition duration-300">詳細を見る</button>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-md overflow-hidden transition duration-300 transform hover:scale-105">
+                    <img src="https://via.placeholder.com/400x300" alt="季節の和菓子" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-mincho font-bold text-xl mb-2">水羊羹</h3>
+                        <p class="text-sm mb-4">夏の涼を感じる、なめらかな口当たりの水羊羹。</p>
+                        <button class="bg-matcha text-white py-2 px-4 rounded hover:bg-opacity-90 transition duration-300">詳細を見る</button>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-md overflow-hidden transition duration-300 transform hover:scale-105">
+                    <img src="https://via.placeholder.com/400x300" alt="季節の和菓子" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-mincho font-bold text-xl mb-2">栗きんとん</h3>
+                        <p class="text-sm mb-4">秋の味覚、栗の風味豊かな伝統の一品。</p>
+                        <button class="bg-matcha text-white py-2 px-4 rounded hover:bg-opacity-90 transition duration-300">詳細を見る</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-12">
+            <h2 class="text-3xl font-mincho font-bold mb-4">当店について</h2>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="mb-4">菓匠 鈴乃家は、江戸時代から続く老舗和菓子店です。代々受け継がれてきた伝統の技と、新しい感性を融合させた和菓子づくりに取り組んでいます。</p>
+                <p>四季折々の素材を活かし、日本の美意識と文化を表現した和菓子を、心を込めてお作りしています。</p>
+            </div>
+        </section>
+
+        <section class="mb-12">
+            <h2 class="text-3xl font-mincho font-bold mb-4">お知らせ</h2>
+            <ul class="bg-white rounded-lg shadow-md p-6 space-y-4">
+                <li class="border-b border-gray-200 pb-2">
+                    <span class="text-matcha font-bold">2023年5月1日</span>
+                    <p>新商品「抹茶ロールケーキ」販売開始のお知らせ</p>
+                </li>
+                <li class="border-b border-gray-200 pb-2">
+                    <span class="text-matcha font-bold">2023年4月15日</span>
+                    <p>ゴールデンウィーク期間中の営業時間変更について</p>
+                </li>
+                <li>
+                    <span class="text-matcha font-bold">2023年4月1日</span>
+                    <p>春の和菓子作り体験教室開催のお知らせ</p>
+                </li>
+            </ul>
+        </section>
+    </main>
+
+    <footer class="bg-matcha text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="font-mincho font-bold text-xl mb-4">菓匠 鈴乃家</h3>
+                    <p class="text-sm">〒123-4567</p>
+                    <p class="text-sm">東京都千代田区和菓子町1-2-3</p>
+                    <p class="text-sm">TEL: 03-1234-5678</p>
+                </div>
+                <div>
+                    <h3 class="font-mincho font-bold text-xl mb-4">営業時間</h3>
+                    <p class="text-sm">平日: 10:00 - 19:00</p>
+                    <p class="text-sm">土日祝: 10:00 - 18:00</p>
+                    <p class="text-sm">定休日: 毎週水曜日</p>
+                </div>
+                <div>
+                    <h3 class="font-mincho font-bold text-xl mb-4">フォローする</h3>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-white hover:text-sakura transition duration-300">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path>
+                            </svg>
+                        </a>
+                        <a href="#" class="text-white hover:text-sakura transition duration-300">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clip-rule="evenodd"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 text-center text-sm">
+                <p>&copy; 2023 菓匠 鈴乃家 All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

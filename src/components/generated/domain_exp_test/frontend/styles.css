@@ -1,0 +1,130 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@layer base {
+  :root {
+    --color-main: #006400;
+    --color-accent: #FFB7C5;
+    --color-text: #4A2311;
+    --color-background: #F3EAD3;
+    --color-hover: #007500;
+  }
+
+  body {
+    @apply bg-[color:var(--color-background)] text-[color:var(--color-text)] font-sans leading-relaxed;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif font-bold;
+  }
+
+  h1 {
+    @apply text-3xl md:text-4xl mb-6;
+  }
+
+  h2 {
+    @apply text-2xl md:text-3xl mb-4;
+  }
+
+  h3 {
+    @apply text-xl md:text-2xl mb-3;
+  }
+
+  p {
+    @apply mb-6;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply bg-[color:var(--color-main)] text-white font-bold py-3 px-6 rounded-full transition duration-300 ease-in-out;
+  }
+
+  .btn:hover {
+    @apply bg-[color:var(--color-hover)];
+  }
+
+  .card {
+    @apply bg-white rounded-lg shadow-md p-6 mb-6;
+  }
+
+  .input {
+    @apply w-full border border-gray-300 rounded-md py-3 px-4 focus:outline-none focus:ring-2 focus:ring-[color:var(--color-main)];
+  }
+
+  .label {
+    @apply block text-sm font-medium mb-2;
+  }
+
+  .nav-link {
+    @apply text-[color:var(--color-text)] hover:text-[color:var(--color-main)] transition duration-300;
+  }
+}
+
+@layer utilities {
+  .text-shadow {
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  .bg-pattern {
+    background-image: url('/path/to/washi-texture.webp');
+    background-repeat: repeat;
+  }
+}
+
+/* 和風モダンなアニメーション */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.7s ease-out;
+}
+
+/* 高コントラストモード */
+.high-contrast {
+  --color-background: #FFEFD5;
+  --color-text: #4A2311;
+}
+
+/* フォーカスインジケータ */
+.focus-visible:focus {
+  @apply outline-none ring-2 ring-[color:var(--color-accent)] ring-opacity-50;
+}
+
+/* レスポンシブグリッド */
+.grid-container {
+  @apply grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 gap-4 md:gap-6 lg:gap-8;
+}
+
+/* 和風アイコン */
+.icon {
+  @apply inline-block w-6 h-6 fill-current;
+}
+
+.icon-lg {
+  @apply w-8 h-8;
+}
+
+.icon-sm {
+  @apply w-4 h-4;
+}
+
+/* 季節テーマ */
+.theme-spring {
+  --color-accent: #FFB7C5;
+}
+
+.theme-summer {
+  --color-accent: #00A3AF;
+}
+
+.theme-autumn {
+  --color-accent: #D3381C;
+}
+
+.theme-winter {
+  --color-accent: #165E83;
+}

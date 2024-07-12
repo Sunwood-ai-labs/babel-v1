@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鮨匠 海乃家 - 最先端AIを活用した回転寿司</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script src="https://unpkg.com/lucide-react@0.263.1/dist/umd/lucide-react.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap');
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Noto Serif JP', serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const { Sushi, Fish, Waves, Chopsticks, Sun, Moon } = lucide.icons;
+
+        function App() {
+            const [theme, setTheme] = useState('light');
+            const [currentSeason, setCurrentSeason] = useState('春');
+
+            useEffect(() => {
+                const currentMonth = new Date().getMonth();
+                if (currentMonth >= 2 && currentMonth <= 4) setCurrentSeason('春');
+                else if (currentMonth >= 5 && currentMonth <= 7) setCurrentSeason('夏');
+                else if (currentMonth >= 8 && currentMonth <= 10) setCurrentSeason('秋');
+                else setCurrentSeason('冬');
+            }, []);
+
+            const toggleTheme = () => {
+                setTheme(theme === 'light' ? 'dark' : 'light');
+            };
+
+            const seasonalColors = {
+                '春': 'bg-pink-100',
+                '夏': 'bg-blue-100',
+                '秋': 'bg-orange-100',
+                '冬': 'bg-gray-200'
+            };
+
+            return (
+                <div className={`min-h-screen ${theme === 'light' ? 'bg-gray-100 text-gray-900' : 'bg-gray-900 text-gray-100'} transition-colors duration-300`}>
+                    <header className={`${seasonalColors[currentSeason]} shadow-lg`}>
+                        <nav className="container mx-auto px-6 py-3">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center">
+                                    <Sushi className="h-8 w-8 mr-2" />
+                                    <span className="text-2xl font-bold">鮨匠 海乃家</span>
+                                </div>
+                                <div className="flex items-center">
+                                    <button onClick={toggleTheme} className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200">
+                                        {theme === 'light' ? <Moon /> : <Sun />}
+                                    </button>
+                                </div>
+                            </div>
+                        </nav>
+                    </header>
+
+                    <main className="container mx-auto px-6 py-8">
+                        <h1 className="text-4xl font-bold mb-8 text-center">AI搭載回転寿司システム</h1>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            <AIAnalysisCard />
+                            <PopularItemsCard />
+                            <InventoryManagementCard />
+                        </div>
+
+                        <div className="mt-12">
+                            <h2 className="text-2xl font-bold mb-4">本日のおすすめ</h2>
+                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                                <SushiItem name="大トロ" price="580" image="/api/placeholder/200/150" />
+                                <SushiItem name="うに" price="480" image="/api/placeholder/200/150" />
+                                <SushiItem name="いくら" price="380" image="/api/placeholder/200/150" />
+                                <SushiItem name="あじ" price="180" image="/api/placeholder/200/150" />
+                            </div>
+                        </div>
+                    </main>
+
+                    <footer className={`${seasonalColors[currentSeason]} mt-12 py-6`}>
+                        <div className="container mx-auto px-6 text-center">
+                            <p>&copy; 2023 鮨匠 海乃家 All rights reserved.</p>
+                        </div>
+                    </footer>
+                </div>
+            );
+        }
+
+        function AIAnalysisCard() {
+            return (
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transform hover:scale-105 transition-transform duration-200">
+                    <h3 className="text-xl font-bold mb-4 flex items-center">
+                        <Fish className="h-6 w-6 mr-2" />
+                        AI分析
+                    </h3>
+                    <p className="mb-4">最新のAI技術を活用して、お客様の嗜好や季節のトレンドを分析しています。</p>
+                    <div className="flex justify-between items-center text-sm text-gray-600 dark:text-gray-400">
+                        <span>精度: 95%</span>
+                        <span>更新: 10分前</span>
+                    </div>
+                </div>
+            );
+        }
+
+        function PopularItemsCard() {
+            const [popularItems, setPopularItems] = useState([
+                { name: "サーモン", count: 120 },
+                { name: "マグロ", count: 100 },
+                { name: "エビ", count: 80 },
+                { name: "イカ", count: 60 },
+            ]);
+
+            useEffect(() => {
+                const interval = setInterval(() => {
+                    setPopularItems(prevItems => 
+                        prevItems.map(item => ({
+                            ...item,
+                            count: item.count + Math.floor(Math.random() * 5)
+                        }))
+                    );
+                }, 5000);
+
+                return () => clearInterval(interval);
+            }, []);
+
+            return (
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transform hover:scale-105 transition-transform duration-200">
+                    <h3 className="text-xl font-bold mb-4 flex items-center">
+                        <Chopsticks className="h-6 w-6 mr-2" />
+                        人気商品
+                    </h3>
+                    <ul>
+                        {popularItems.map((item, index) => (
+                            <li key={index} className="flex justify-between items-center mb-2">
+                                <span>{item.name}</span>
+                                <span className="text-sm text-gray-600 dark:text-gray-400">{item.count}回注文</span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            );
+        }
+
+        function InventoryManagementCard() {
+            const [inventory, setInventory] = useState([
+                { name: "マグロ", stock: 80 },
+                { name: "サーモン", stock: 75 },
+                { name: "ハマチ", stock: 60 },
+                { name: "エビ", stock: 90 },
+            ]);
+
+            useEffect(() => {
+                const interval = setInterval(() => {
+                    setInventory(prevInventory => 
+                        prevInventory.map(item => ({
+                            ...item,
+                            stock: Math.max(0, item.stock - Math.floor(Math.random() * 5))
+                        }))
+                    );
+                }, 7000);
+
+                return () => clearInterval(interval);
+            }, []);
+
+            return (
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transform hover:scale-105 transition-transform duration-200">
+                    <h3 className="text-xl font-bold mb-4 flex items-center">
+                        <Waves className="h-6 w-6 mr-2" />
+                        在庫管理
+                    </h3>
+                    <ul>
+                        {inventory.map((item, index) => (
+                            <li key={index} className="flex justify-between items-center mb-2">
+                                <span>{item.name}</span>
+                                <div className="w-1/2 bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                                    <div 
+                                        className="bg-blue-600 h-2.5 rounded-full" 
+                                        style={{width: `${item.stock}%`}}
+                                    ></div>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            );
+        }
+
+        function SushiItem({ name, price, image }) {
+            return (
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition-transform duration-200">
+                    <img src={image} alt={name} className="w-full h-32 object-cover" />
+                    <div className="p-4">
+                        <h4 className="font-bold mb-2">{name}</h4>
+                        <p className="text-gray-600 dark:text-gray-400">{price}円</p>
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>

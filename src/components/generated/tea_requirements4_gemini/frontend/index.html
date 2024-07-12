@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>抹茶カフェ</title>
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div id="root"></div>
+  <script src="/index.js"></script>
+</body>
+</html>
+import React from 'react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { Server, Database } from 'lucide-react';
+
+const data = [
+  { name: 'モデルA', 正解率: 85, 損失関数: 0.25, amt: 12 },
+  { name: 'モデルB', 正解率: 92, 損失関数: 0.18, amt: 18 },
+  { name: 'モデルC', 正解率: 78, 損失関数: 0.32, amt: 8 },
+];
+
+const AILearningStatus = () => {
+  return (
+    <div className="bg-white rounded-lg shadow-md p-6">
+      <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+        <Server className="mr-2 h-5 w-5 text-green-500" /> AI学習状況
+      </h2>
+      <BarChart width={600} height={300} data={data}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="name" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+        <Bar dataKey="正解率" fill="#8884d8" />
+        <Bar dataKey="損失関数" fill="#82ca9d" />
+      </BarChart>
+      <div className="mt-4 flex items-center">
+        <Database className="mr-2 h-5 w-5 text-gray-600" />
+        <span className="text-gray-600">最新データ: 2023年10月26日 15:00</span>
+      </div>
+    </div>
+  );
+};
+
+export default AILearningStatus;

@@ -1,0 +1,235 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@layer base {
+  body {
+    @apply bg-gray-50 text-gray-900 font-sans;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply px-4 py-2 rounded-md transition duration-300 ease-in-out;
+  }
+  .btn-primary {
+    @apply bg-indigo-600 text-white hover:bg-indigo-700;
+  }
+  .btn-secondary {
+    @apply bg-gray-200 text-gray-800 hover:bg-gray-300;
+  }
+  .input {
+    @apply px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500;
+  }
+  .card {
+    @apply bg-white shadow-md rounded-lg overflow-hidden;
+  }
+}
+
+.ai-theme {
+  @apply bg-gradient-to-br from-indigo-50 to-purple-50;
+}
+
+.japanese-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+.ai-icon {
+  @apply text-indigo-600;
+}
+
+.edu-icon {
+  @apply text-green-600;
+}
+
+.zen-bg {
+  @apply bg-gray-100;
+}
+
+.shoji-border {
+  @apply border-2 border-gray-200 rounded-md;
+}
+
+.washi-texture {
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23000000' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+}
+import React, { useState } from 'react';
+import { FiBook, FiUser, FiCalendar, FiBarChart2 } from 'react-icons/fi';
+
+const App = () => {
+  const [activeTab, setActiveTab] = useState('dashboard');
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'dashboard':
+        return <Dashboard />;
+      case 'courses':
+        return <Courses />;
+      case 'students':
+        return <Students />;
+      case 'analytics':
+        return <Analytics />;
+      default:
+        return <Dashboard />;
+    }
+  };
+
+  return (
+    <div className="min-h-screen ai-theme japanese-pattern">
+      <header className="bg-white shadow-md">
+        <div className="container mx-auto px-4 py-6 flex justify-between items-center">
+          <h1 className="text-2xl font-bold text-indigo-600">AI塾管理システム</h1>
+          <nav>
+            <ul className="flex space-x-4">
+              <li>
+                <button
+                  className={`btn ${activeTab === 'dashboard' ? 'btn-primary' : 'btn-secondary'}`}
+                  onClick={() => setActiveTab('dashboard')}
+                >
+                  <FiBook className="inline-block mr-2" />
+                  ダッシュボード
+                </button>
+              </li>
+              <li>
+                <button
+                  className={`btn ${activeTab === 'courses' ? 'btn-primary' : 'btn-secondary'}`}
+                  onClick={() => setActiveTab('courses')}
+                >
+                  <FiCalendar className="inline-block mr-2" />
+                  コース
+                </button>
+              </li>
+              <li>
+                <button
+                  className={`btn ${activeTab === 'students' ? 'btn-primary' : 'btn-secondary'}`}
+                  onClick={() => setActiveTab('students')}
+                >
+                  <FiUser className="inline-block mr-2" />
+                  生徒
+                </button>
+              </li>
+              <li>
+                <button
+                  className={`btn ${activeTab === 'analytics' ? 'btn-primary' : 'btn-secondary'}`}
+                  onClick={() => setActiveTab('analytics')}
+                >
+                  <FiBarChart2 className="inline-block mr-2" />
+                  分析
+                </button>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </header>
+      <main className="container mx-auto px-4 py-8">
+        {renderContent()}
+      </main>
+    </div>
+  );
+};
+
+const Dashboard = () => (
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="card p-6">
+      <h2 className="text-xl font-semibold mb-4">最新のお知らせ</h2>
+      <ul className="space-y-2">
+        <li className="flex items-center">
+          <span className="w-2 h-2 bg-indigo-500 rounded-full mr-2"></span>
+          新しいAIコース「機械学習入門」が追加されました
+        </li>
+        <li className="flex items-center">
+          <span className="w-2 h-2 bg-indigo-500 rounded-full mr-2"></span>
+          次回の定期テストは6月15日です
+        </li>
+      </ul>
+    </div>
+    <div className="card p-6">
+      <h2 className="text-xl font-semibold mb-4">生徒の進捗状況</h2>
+      <div className="h-40 bg-gray-200 rounded-md flex items-center justify-center">
+        グラフプレースホルダー
+      </div>
+    </div>
+    <div className="card p-6">
+      <h2 className="text-xl font-semibold mb-4">今日のスケジュール</h2>
+      <ul className="space-y-2">
+        <li className="flex justify-between">
+          <span>AIプログラミング基礎</span>
+          <span>14:00 - 15:30</span>
+        </li>
+        <li className="flex justify-between">
+          <span>データ分析演習</span>
+          <span>16:00 - 17:30</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+);
+
+const Courses = () => (
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="card p-6">
+      <h2 className="text-xl font-semibold mb-4">AIプログラミング基礎</h2>
+      <p className="mb-4">Python を使用したAIプログラミングの基礎を学びます。</p>
+      <button className="btn btn-primary">詳細を見る</button>
+    </div>
+    <div className="card p-6">
+      <h2 className="text-xl font-semibold mb-4">機械学習入門</h2>
+      <p className="mb-4">機械学習の基本概念と実践的なアプリケーションを学びます。</p>
+      <button className="btn btn-primary">詳細を見る</button>
+    </div>
+    <div className="card p-6">
+      <h2 className="text-xl font-semibold mb-4">データ分析演習</h2>
+      <p className="mb-4">実際のデータセットを使用してデータ分析スキルを磨きます。</p>
+      <button className="btn btn-primary">詳細を見る</button>
+    </div>
+  </div>
+);
+
+const Students = () => (
+  <div className="card p-6">
+    <h2 className="text-xl font-semibold mb-4">生徒一覧</h2>
+    <table className="w-full">
+      <thead>
+        <tr className="bg-gray-100">
+          <th className="p-2 text-left">名前</th>
+          <th className="p-2 text-left">コース</th>
+          <th className="p-2 text-left">進捗状況</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td className="p-2">山田太郎</td>
+          <td className="p-2">AIプログラミング基礎</td>
+          <td className="p-2">75%</td>
+        </tr>
+        <tr className="bg-gray-50">
+          <td className="p-2">佐藤花子</td>
+          <td className="p-2">機械学習入門</td>
+          <td className="p-2">60%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+);
+
+const Analytics = () => (
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="card p-6">
+      <h2 className="text-xl font-semibold mb-4">コース別受講者数</h2>
+      <div className="h-64 bg-gray-200 rounded-md flex items-center justify-center">
+        グラフプレースホルダー
+      </div>
+    </div>
+    <div className="card p-6">
+      <h2 className="text-xl font-semibold mb-4">月別売上推移</h2>
+      <div className="h-64 bg-gray-200 rounded-md flex items-center justify-center">
+        グラフプレースホルダー
+      </div>
+    </div>
+  </div>
+);
+
+export default App;

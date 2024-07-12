@@ -7,6 +7,92 @@ import { withoutAuthor } from '../../utils/gitGraphTemplate';
 import { getDummyData } from '../../constants/dummyData';
 import { FileStructure } from './ForceGraphComponents';
 
+
+// 新しいシステム作成ダイアログコンポーネント
+const CreateSystemDialog = ({ isOpen, onClose, onCreate }: { isOpen: boolean; onClose: () => void; onCreate: (name: string) => void }) => {
+  const { t } = useTranslation();
+  const [newSystemName, setNewSystemName] = useState('');
+  const [isCreating, setIsCreating] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleCreate = async () => {
+    if (newSystemName.trim() === '') {
+      setError(t('システム名を入力してください'));
+      return;
+    }
+    setIsCreating(true);
+    setError('');
+    try {
+      // APIにPOSTリクエストを送信
+      const response = await fetch(`http://localhost:8000/create_new_system?name=${encodeURIComponent(newSystemName)}`, {
+        method: 'POST',
+        headers: {
+          'accept': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('APIリクエストが失敗しました');
+      }
+
+      const result = await response.json();
+      console.log(result);
+
+      // // 新しいシステムを作成
+      // const newSystem = {
+      //   value: newSystemName,
+      //   label: newSystemName,
+      //   path: result.path || `/dummy/path/${newSystemName}`,
+      //   image: `https://picsum.photos/200/300?random=${Math.random()}`
+      // };
+      
+      // // 新しいシステムを追加
+      // await onCreate(newSystem);
+      
+      // setNewSystemName('');
+      onClose();
+      
+      // ファイル構造の画面に遷移
+      // 注意: この部分は親コンポーネントで処理する必要があるかもしれません
+      // 例: set選択されたシステム(newSystem.value);
+    } catch (err) {
+      console.error('システム作成エラー:', err);
+      setError(t('システムの作成に失敗しました。もう一度お試しください。'));
+    } finally {
+      setIsCreating(false);
+    }
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="bg-gradient-to-br from-[#1a1a2e] to-[#16213e] text-[#e0e0e0] border-[#4a00e0] rounded-xl shadow-2xl">
+        <DialogHeader>
+          <DialogTitle className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#7f00ff] to-[#e100ff]">
+            {t('新規システム作成')}
+          </DialogTitle>
+        </DialogHeader>
+        <Input
+          type="text"
+          placeholder={t('システム名')}
+          value={newSystemName}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewSystemName(e.target.value)}
+          className="w-full pl-4 pr-4 py-3 text-lg bg-[#2a2a4a] border-2 border-[#4a00e0] focus:outline-none focus:ring-2 focus:ring-[#7f00ff] focus:border-[#7f00ff] rounded-lg font-sans text-[#ffffff] transition duration-300 ease-in-out placeholder-[#8a8a9a]"
+        />
+        {error && <p className="text-red-500 mt-2">{error}</p>}
+        <DialogFooter>
+          <Button 
+            onClick={handleCreate} 
+            disabled={isCreating}
+            className="px-6 py-3 bg-gradient-to-r from-[#7f00ff] to-[#e100ff] text-[#ffffff] rounded-lg hover:from-[#9500ff] hover:to-[#ff00ff] transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#7f00ff] focus:ring-opacity-50 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isCreating ? t('作成中...') : t('作成')}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
 // Button コンポーネント
 const Button = ({ children, className, ...props }) => (
   <button
@@ -248,7 +334,6 @@ const VersionControl = () => {
   const [directoryOptions, setDirectoryOptions] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [isCreateSystemDialogOpen, setIsCreateSystemDialogOpen] = useState(false);
-  const [newSystemName, setNewSystemName] = useState('');
 
   const ノード選択処理 = useCallback((ノード, event) => {
     set選択中ノード(前のノード => 前のノード && 前のノード.id === ノード.id ? null : ノード);
@@ -279,205 +364,184 @@ const VersionControl = () => {
           image: `https://picsum.photos/200/300?random=magic${dir.name}` // ランダムな画像URLを追加
         }));
         setDirectoryOptions(options);
-      } catch (error) {console.error('生成されたディレクトリの取得に失敗しました:', error);
-      // エラーメッセージをユーザーに表示するなどの処理を追加
+      } catch (error) {
+        console.error('生成されたディレクトリの取得に失敗しました:', error);
+        // エラーメッセージをユーザーに表示するなどの処理を追加
+      }
+    };
+
+    fetchGeneratedDirs();
+  }, []);
+
+  const filteredDirectoryOptions = directoryOptions.filter(option =>
+    option.label.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const handleCreateSystem = async (newSystemName) => {
+    try {
+      const response = await fetch('http://localhost:8000/api/create-system', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name: newSystemName }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log('新しいシステムが作成されました:', result);
+
+      // 新しいシステムをdirectoryOptionsに追加
+      setDirectoryOptions(prevOptions => [
+        ...prevOptions,
+        {
+          value: result.name,
+          label: result.name,
+          path: result.path,
+          image: `https://picsum.photos/200/300?random=magic${result.name}`
+        }
+      ]);
+
+    } catch (error) {
+      console.error('システムの作成に失敗しました:', error);
+      alert(t('システムの作成に失敗しました。もう一度お試しください。'));
     }
   };
 
-  fetchGeneratedDirs();
-}, []);
-
-const filteredDirectoryOptions = directoryOptions.filter(option =>
-  option.label.toLowerCase().includes(searchTerm.toLowerCase())
-);
-
-const handleCreateSystem = async () => {
-  if (newSystemName.trim() === '') {
-    alert(t('システム名を入力してください'));
-    return;
-  }
-
-  try {
-    const response = await fetch('http://localhost:8000/api/create-system', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ name: newSystemName }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const result = await response.json();
-    console.log('新しいシステムが作成されました:', result);
-
-    // 新しいシステムをdirectoryOptionsに追加
-    setDirectoryOptions(prevOptions => [
-      ...prevOptions,
-      {
-        value: result.name,
-        label: result.name,
-        path: result.path,
-        image: `https://picsum.photos/200/300?random=magic${result.name}`
-      }
-    ]);
-
-    setNewSystemName('');
-    setIsCreateSystemDialogOpen(false);
-  } catch (error) {
-    console.error('システムの作成に失敗しました:', error);
-    alert(t('システムの作成に失敗しました。もう一度お試しください。'));
-  }
-};
-
-return (
-  <div className="min-h-screen bg-gradient-to-br from-[#2a2a2a] to-[#1e1e1e] text-[#e0e0e0] p-8">
-    <div className="flex justify-between items-center mb-6">
-      <h2 className="text-3xl font-bold text-[#ffffff] font-sans">{t('システム一覧')}</h2>
-      {選択されたシステム && (
-        <Button
-          onClick={() => set選択されたシステム('')}
-          variant="secondary"
-          className="px-4 py-2 bg-[#007acc] text-white rounded-lg hover:bg-[#005fa3] transition duration-300"
-        >
-          {t('ホームに戻る')}
-        </Button>
-      )}
-    </div>
-    
-    {選択されたシステム ? (
-      <>
-        <SystemDirectorySelector onSelectDirectory={ディレクトリ選択処理} options={directoryOptions} />
-        <div className="relative h-[600px] mb-8">
-          <FileStructure 
-            ファイル構造データ={ファイル構造データ} 
-            onNodeClick={ノード選択処理} 
-            選択されたシステム={選択されたシステム}
-          />
-          {選択中ノード && (
-            <AIChat 
-              nodes={[選択中ノード]} 
-              onClose={() => set選択中ノード(null)}
-              position={チャット位置}
-            />
-          )}
-        </div>
-
-        <div className="mb-8">
-          <label htmlFor="branch-select" className="block text-lg font-medium text-[#e0e0e0] mb-3 font-sans">
-            {t('ブランチ選択')}
-          </label>
-          <select
-            id="branch-select"
-            value={選択中のブランチ}
-            onChange={(e) => set選択中のブランチ(e.target.value)}
-            className="w-full pl-4 pr-10 py-3 text-lg bg-[#3c3c3c] border-2 border-[#007acc] focus:outline-none focus:ring-2 focus:ring-[#007acc] focus:border-[#007acc] rounded-lg font-sans text-[#ffffff] transition duration-300 ease-in-out"
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-[#2a2a2a] to-[#1e1e1e] text-[#e0e0e0] p-8">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-3xl font-bold text-[#ffffff] font-sans">{t('システム一覧')}</h2>
+        {選択されたシステム && (
+          <Button
+            onClick={() => set選択されたシステム('')}
+            variant="secondary"
+            className="px-4 py-2 bg-[#007acc] text-white rounded-lg hover:bg-[#005fa3] transition duration-300"
           >
-            {ブランチ.map((ブランチ名) => (
-              <option key={ブランチ名} value={ブランチ名}>{ブランチ名}</option>
-            ))}
-          </select>
-        </div>
+            {t('ホームに戻る')}
+          </Button>
+        )}
+      </div>
+      
+      {選択されたシステム ? (
+        <>
+          <SystemDirectorySelector onSelectDirectory={ディレクトリ選択処理} options={directoryOptions} />
+          <div className="relative h-[600px] mb-8">
+            <FileStructure 
+              ファイル構造データ={ファイル構造データ} 
+              onNodeClick={ノード選択処理} 
+              選択されたシステム={選択されたシステム}
+            />
+            {選択中ノード && (
+              <AIChat 
+                nodes={[選択中ノード]} 
+                onClose={() => set選択中ノード(null)}
+                position={チャット位置}
+              />
+            )}
+          </div>
 
-        <GitGraph />
+          <div className="mb-8">
+            <label htmlFor="branch-select" className="block text-lg font-medium text-[#e0e0e0] mb-3 font-sans">
+              {t('ブランチ選択')}
+            </label>
+            <select
+              id="branch-select"
+              value={選択中のブランチ}
+              onChange={(e) => set選択中のブランチ(e.target.value)}
+              className="w-full pl-4 pr-10 py-3 text-lg bg-[#3c3c3c] border-2 border-[#007acc] focus:outline-none focus:ring-2 focus:ring-[#007acc] focus:border-[#007acc] rounded-lg font-sans text-[#ffffff] transition duration-300 ease-in-out"
+            >
+              {ブランチ.map((ブランチ名) => (
+                <option key={ブランチ名} value={ブランチ名}>{ブランチ名}</option>
+              ))}
+            </select>
+          </div>
 
-        <div className="mt-10">
-          <h3 className="text-2xl font-bold mb-5 text-[#ffffff] font-sans">{t('最近のコミット')}</h3>
-          <div className="space-y-4">
-            {コミット.map((コミット) => (
-              <div key={コミット.id} className="flex items-start p-5 bg-gradient-to-r from-[#2d2d2d] to-[#252525] rounded-lg border-l-4 border-[#007acc] shadow-md transition duration-300 ease-in-out hover:shadow-lg">
-                <GitCommit className="text-[#007acc] mr-4 flex-shrink-0 w-6 h-6" />
-                <div>
-                  <p className="font-bold text-lg text-[#ffffff] font-sans mb-1">{コミット.メッセージ}</p>
-                  <p className="text-sm text-[#b0b0b0] font-sans">
-                    {t('作成者')} <span className="text-[#007acc]">{コミット.作成者}</span> • {t('日付')} <span className="text-[#007acc]">{コミット.日付}</span>
-                  </p>
+          <GitGraph />
+
+          <div className="mt-10">
+            <h3 className="text-2xl font-bold mb-5 text-[#ffffff] font-sans">{t('最近のコミット')}</h3>
+            <div className="space-y-4">
+              {コミット.map((コミット) => (
+                <div key={コミット.id} className="flex items-start p-5 bg-gradient-to-r from-[#2d2d2d] to-[#252525] rounded-lg border-l-4 border-[#007acc] shadow-md transition duration-300 ease-in-out hover:shadow-lg">
+                  <GitCommit className="text-[#007acc] mr-4 flex-shrink-0 w-6 h-6" />
+                  <div>
+                    <p className="font-bold text-lg text-[#ffffff] font-sans mb-1">{コミット.メッセージ}</p>
+                    <p className="text-sm text-[#b0b0b0] font-sans">
+                      {t('作成者')} <span className="text-[#007acc]">{コミット.作成者}</span> • {t('日付')} <span className="text-[#007acc]">{コミット.日付}</span>
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-10 flex justify-between">
+            <Button className="flex items-center px-6 py-3 bg-gradient-to-r from-[#007acc] to-[#0056b3] text-[#ffffff] rounded-full hover:from-[#0056b3] hover:to-[#003d82] transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#007acc] focus:ring-opacity-50 shadow-lg">
+              <GitBranch className="mr-2 w-5 h-5" />
+              <span className="text-lg font-medium">{t('新規ブランチ')}</span>
+            </Button>
+            <Button className="flex items-center px-6 py-3 bg-gradient-to-r from-[#388e3c] to-[#2e7d32] text-[#ffffff] rounded-full hover:from-[#2e7d32] hover:to-[#1b5e20] transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#388e3c] focus:ring-opacity-50 shadow-lg">
+              <GitMerge className="mr-2 w-5 h-5" />
+              <span className="text-lg font-medium">{t('マージ')}</span>
+            </Button>
+            <Button className="flex items-center px-6 py-3 bg-gradient-to-r from-[#0288d1] to-[#01579b] text-[#ffffff] rounded-full hover:from-[#01579b] hover:to-[#01426a] transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#0288d1] focus:ring-opacity-50 shadow-lg">
+              <GitPullRequest className="mr-2 w-5 h-5" />
+              <span className="text-lg font-medium">{t('プルリクエスト')}</span>
+            </Button>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="flex justify-between items-center mb-6">
+            <div className="relative flex-grow mr-4">
+              <Input
+                type="text"
+                placeholder={t('システムを検索...')}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 text-lg bg-[#3c3c3c] border-2 border-[#007acc] focus:outline-none focus:ring-2 focus:ring-[#007acc] focus:border-[#007acc] rounded-lg font-sans text-[#ffffff] transition duration-300 ease-in-out"
+              />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#007acc]" />
+            </div>
+            <Button
+              onClick={() => setIsCreateSystemDialogOpen(true)}
+              className="flex items-center px-4 py-2 bg-gradient-to-r from-[#007acc] to-[#0056b3] text-[#ffffff] rounded-lg hover:from-[#0056b3] hover:to-[#003d82] transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#007acc] focus:ring-opacity-50 shadow-lg"
+            >
+              <Plus className="mr-2 w-5 h-5" />
+              <span>{t('新規システム作成')}</span>
+            </Button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredDirectoryOptions.map((システム) => (
+              <div 
+                key={システム.value} 
+                className="bg-gradient-to-r from-[#2d2d2d] to-[#252525] rounded-lg shadow-md overflow-hidden cursor-pointer transition duration-300 ease-in-out hover:shadow-lg hover:from-[#333333] hover:to-[#2a2a2a]"
+                onClick={() => ディレクトリ選択処理(システム)}
+              >
+                <div className="h-40 overflow-hidden">
+                  <img src={システム.image} alt={システム.label} className="w-full h-full object-cover" />
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-[#ffffff] mb-3">{システム.label}</h3>
+                  <p className="text-[#b0b0b0]">{t('パス')}: {システム.path}</p>
                 </div>
               </div>
             ))}
           </div>
-        </div>
+        </>
+      )}
 
-        <div className="mt-10 flex justify-between">
-          <Button className="flex items-center px-6 py-3 bg-gradient-to-r from-[#007acc] to-[#0056b3] text-[#ffffff] rounded-full hover:from-[#0056b3] hover:to-[#003d82] transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#007acc] focus:ring-opacity-50 shadow-lg">
-            <GitBranch className="mr-2 w-5 h-5" />
-            <span className="text-lg font-medium">{t('新規ブランチ')}</span>
-          </Button>
-          <Button className="flex items-center px-6 py-3 bg-gradient-to-r from-[#388e3c] to-[#2e7d32] text-[#ffffff] rounded-full hover:from-[#2e7d32] hover:to-[#1b5e20] transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#388e3c] focus:ring-opacity-50 shadow-lg">
-            <GitMerge className="mr-2 w-5 h-5" />
-            <span className="text-lg font-medium">{t('マージ')}</span>
-          </Button>
-          <Button className="flex items-center px-6 py-3 bg-gradient-to-r from-[#0288d1] to-[#01579b] text-[#ffffff] rounded-full hover:from-[#01579b] hover:to-[#01426a] transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#0288d1] focus:ring-opacity-50 shadow-lg">
-            <GitPullRequest className="mr-2 w-5 h-5" />
-            <span className="text-lg font-medium">{t('プルリクエスト')}</span>
-          </Button>
-        </div>
-      </>
-    ) : (
-      <>
-        <div className="flex justify-between items-center mb-6">
-          <div className="relative flex-grow mr-4">
-            <Input
-              type="text"
-              placeholder={t('システムを検索...')}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 text-lg bg-[#3c3c3c] border-2 border-[#007acc] focus:outline-none focus:ring-2 focus:ring-[#007acc] focus:border-[#007acc] rounded-lg font-sans text-[#ffffff] transition duration-300 ease-in-out"
-            />
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#007acc]" />
-          </div>
-          <Dialog open={isCreateSystemDialogOpen} onOpenChange={setIsCreateSystemDialogOpen}>
-            <DialogTrigger asChild>
-              <Button className="flex items-center px-4 py-2 bg-gradient-to-r from-[#007acc] to-[#0056b3] text-[#ffffff] rounded-lg hover:from-[#0056b3] hover:to-[#003d82] transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#007acc] focus:ring-opacity-50 shadow-lg">
-                <Plus className="mr-2 w-5 h-5" />
-                <span>{t('新規システム作成')}</span>
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="bg-[#2a2a2a] text-[#e0e0e0] border-[#007acc]">
-              <DialogHeader>
-                <DialogTitle className="text-[#ffffff]">{t('新規システム作成')}</DialogTitle>
-                <DialogDescription className="text-[#b0b0b0]">
-                  {t('新しいシステムの名前を入力してください。')}
-                </DialogDescription>
-              </DialogHeader>
-              <Input
-                type="text"
-                placeholder={t('システム名')}
-                value={newSystemName}
-                onChange={(e) => setNewSystemName(e.target.value)}
-                className="w-full pl-4 pr-4 py-2 text-lg bg-[#3c3c3c] border-2 border-[#007acc] focus:outline-none focus:ring-2 focus:ring-[#007acc] focus:border-[#007acc] rounded-lg font-sans text-[#ffffff] transition duration-300 ease-in-out"
-              />
-              <DialogFooter>
-                <Button onClick={handleCreateSystem} className="bg-[#007acc] text-[#ffffff] hover:bg-[#005fa3]">
-                  {t('作成')}
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredDirectoryOptions.map((システム) => (
-            <div 
-              key={システム.value} 
-              className="bg-gradient-to-r from-[#2d2d2d] to-[#252525] rounded-lg shadow-md overflow-hidden cursor-pointer transition duration-300 ease-in-out hover:shadow-lg hover:from-[#333333] hover:to-[#2a2a2a]"
-              onClick={() => ディレクトリ選択処理(システム)}
-            >
-              <div className="h-40 overflow-hidden">
-                <img src={システム.image} alt={システム.label} className="w-full h-full object-cover" />
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-[#ffffff] mb-3">{システム.label}</h3>
-                <p className="text-[#b0b0b0]">{t('パス')}: {システム.path}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </>
-    )}
-  </div>
-);
+      <CreateSystemDialog
+        isOpen={isCreateSystemDialogOpen}
+        onClose={() => setIsCreateSystemDialogOpen(false)}
+        onCreate={handleCreateSystem}
+      />
+    </div>
+  );
 };
 
 export default React.memo(VersionControl);

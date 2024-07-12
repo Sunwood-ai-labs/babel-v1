@@ -1,0 +1,215 @@
+# はい、承知しました。styles.cssファイルに、コンポーネントを中心としたスタイルを記載します。Tailwindクラスを使用せず、純粋なCSSで記述します。
+# 
+# /* styles.css */
+# 
+# /* 全体のスタイル */
+# body {
+#   font-family: 'Arial', sans-serif;
+#   line-height: 1.6;
+#   color: #333;
+#   background-color: #f4f4f4;
+# }
+# 
+# /* App コンポーネント */
+# .app {
+#   max-width: 1200px;
+#   margin: 0 auto;
+#   padding: 20px;
+# }
+# 
+# /* DynamicComponent */
+# .dynamic-component {
+#   background-color: #fff;
+#   border-radius: 8px;
+#   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+#   padding: 20px;
+#   margin-bottom: 20px;
+# }
+# 
+# /* LandingPage コンポーネント */
+# .landing-page {
+#   text-align: center;
+# }
+# 
+# .landing-page h1 {
+#   font-size: 2.5rem;
+#   color: #2c3e50;
+#   margin-bottom: 20px;
+# }
+# 
+# .landing-page p {
+#   font-size: 1.2rem;
+#   color: #34495e;
+#   margin-bottom: 30px;
+# }
+# 
+# /* KPIDashboard コンポーネント */
+# .kpi-dashboard {
+#   display: grid;
+#   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+#   gap: 20px;
+# }
+# 
+# .kpi-card {
+#   background-color: #fff;
+#   border-radius: 8px;
+#   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+#   padding: 20px;
+#   text-align: center;
+# }
+# 
+# .kpi-card h3 {
+#   font-size: 1.2rem;
+#   color: #2c3e50;
+#   margin-bottom: 10px;
+# }
+# 
+# .kpi-card .value {
+#   font-size: 2rem;
+#   font-weight: bold;
+#   color: #3498db;
+# }
+# 
+# /* AIManagement コンポーネント */
+# .ai-management {
+#   background-color: #ecf0f1;
+#   border-radius: 8px;
+#   padding: 20px;
+# }
+# 
+# .ai-management h2 {
+#   font-size: 1.8rem;
+#   color: #2c3e50;
+#   margin-bottom: 20px;
+# }
+# 
+# /* Application コンポーネント */
+# .application {
+#   background-color: #e8f6f3;
+#   border-radius: 8px;
+#   padding: 20px;
+# }
+# 
+# .application h2 {
+#   font-size: 1.8rem;
+#   color: #16a085;
+#   margin-bottom: 20px;
+# }
+# 
+# /* CurrentAnalysis コンポーネント */
+# .current-analysis {
+#   background-color: #fdf2e9;
+#   border-radius: 8px;
+#   padding: 20px;
+# }
+# 
+# .current-analysis h2 {
+#   font-size: 1.8rem;
+#   color: #d35400;
+#   margin-bottom: 20px;
+# }
+# 
+# /* Marketing コンポーネント */
+# .marketing {
+#   background-color: #eafaf1;
+#   border-radius: 8px;
+#   padding: 20px;
+# }
+# 
+# .marketing h2 {
+#   font-size: 1.8rem;
+#   color: #27ae60;
+#   margin-bottom: 20px;
+# }
+# 
+# /* Team コンポーネント */
+# .team {
+#   background-color: #ebf5fb;
+#   border-radius: 8px;
+#   padding: 20px;
+# }
+# 
+# .team h2 {
+#   font-size: 1.8rem;
+#   color: #3498db;
+#   margin-bottom: 20px;
+# }
+# 
+# /* InternalSystems コンポーネント */
+# .internal-systems {
+#   background-color: #f4ecf7;
+#   border-radius: 8px;
+#   padding: 20px;
+# }
+# 
+# .internal-systems h2 {
+#   font-size: 1.8rem;
+#   color: #8e44ad;
+#   margin-bottom: 20px;
+# }
+# 
+# /* Security コンポーネント */
+# .security {
+#   background-color: #fdedec;
+#   border-radius: 8px;
+#   padding: 20px;
+# }
+# 
+# .security h2 {
+#   font-size: 1.8rem;
+#   color: #c0392b;
+#   margin-bottom: 20px;
+# }
+# 
+# /* 共通のボタンスタイル */
+# .button {
+#   display: inline-block;
+#   padding: 10px 20px;
+#   background-color: #3498db;
+#   color: #fff;
+#   text-decoration: none;
+#   border-radius: 4px;
+#   transition: background-color 0.3s ease;
+# }
+# 
+# .button:hover {
+#   background-color: #2980b9;
+# }
+# 
+# /* フォームスタイル */
+# .form-group {
+#   margin-bottom: 20px;
+# }
+# 
+# .form-group label {
+#   display: block;
+#   margin-bottom: 5px;
+#   font-weight: bold;
+# }
+# 
+# .form-group input,
+# .form-group textarea {
+#   width: 100%;
+#   padding: 10px;
+#   border: 1px solid #ddd;
+#   border-radius: 4px;
+# }
+# 
+# /* レスポンシブデザイン */
+# @media (max-width: 768px) {
+#   .kpi-dashboard {
+#     grid-template-columns: 1fr;
+#   }
+# 
+#   .landing-page h1 {
+#     font-size: 2rem;
+#   }
+# 
+#   .landing-page p {
+#     font-size: 1rem;
+#   }
+# }
+# 
+# このCSSファイルでは、各主要コンポーネントに対してスタイルを定義しています。色やレイアウトは、おちゃのHPv3のブランドカラーやデザイン方針に合わせて適宜調整してください。また、レスポンシブデザインの基本的な対応も含めています。
+# 
+# このスタイルシートを使用することで、おちゃのHPv3の各コンポーネントに一貫性のあるデザインを適用し、視覚的に魅力的で使いやすいインターフェースを実現できます。

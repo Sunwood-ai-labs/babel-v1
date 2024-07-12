@@ -1,0 +1,78 @@
+import React, { useState } from 'react';
+import MenuBar from './components/MenuBar';
+import GlobalChat from './components/GlobalChat';
+import MultilingualWiki from './components/MultilingualWiki';
+import ProjectDashboard from './components/ProjectDashboard';
+
+const App = () => {
+  const [activeComponent, setActiveComponent] = useState('GlobalChat');
+
+  const renderComponent = () => {
+    switch (activeComponent) {
+      case 'GlobalChat':
+        return <GlobalChat />;
+      case 'MultilingualWiki':
+        return <MultilingualWiki />;
+      case 'ProjectDashboard':
+        return <ProjectDashboard />;
+      default:
+        return <GlobalChat />;
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
+      <MenuBar setActiveComponent={setActiveComponent} />
+      <main className="container mx-auto px-4 py-8">
+        {renderComponent()}
+      </main>
+    </div>
+  );
+};
+
+export default App;
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@layer base {
+  :root {
+    --color-primary: 74 144 226;
+    --color-secondary: 80 227 194;
+    --color-accent: 245 166 35;
+    --color-background: 255 255 255;
+    --color-text: 51 51 51;
+  }
+
+  .dark {
+    --color-primary: 74 144 226;
+    --color-secondary: 80 227 194;
+    --color-accent: 245 166 35;
+    --color-background: 17 24 39;
+    --color-text: 229 231 235;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply px-4 py-2 rounded-md transition-colors duration-200;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-white hover:bg-primary-dark;
+  }
+
+  .btn-secondary {
+    @apply bg-secondary text-white hover:bg-secondary-dark;
+  }
+}
+
+@layer utilities {
+  .text-shadow {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  }
+}
+
+body {
+  font-family: 'Noto Sans JP', 'Roboto', sans-serif;
+}
