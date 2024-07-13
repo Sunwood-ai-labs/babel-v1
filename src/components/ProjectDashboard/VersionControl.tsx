@@ -444,7 +444,7 @@ const VersionControl = () => {
             )}
           </div>
 
-          {/* <div className="mb-8">
+          <div className="mb-8">
             <label htmlFor="branch-select" className="block text-lg font-medium text-[#e0e0e0] mb-3 font-sans">
               {t('ブランチ選択')}
             </label>
@@ -458,11 +458,11 @@ const VersionControl = () => {
                 <option key={ブランチ名} value={ブランチ名}>{ブランチ名}</option>
               ))}
             </select>
-          </div> */}
+          </div>
 
-          {/* <GitGraph /> */}
+          <GitGraph />
 
-          {/* <div className="mt-10">
+          <div className="mt-10">
             <h3 className="text-2xl font-bold mb-5 text-[#ffffff] font-sans">{t('最近のコミット')}</h3>
             <div className="space-y-4">
               {コミット.map((コミット) => (
@@ -477,9 +477,9 @@ const VersionControl = () => {
                 </div>
               ))}
             </div>
-          </div> */}
+          </div>
 
-          {/* <div className="mt-10 flex justify-between">
+          <div className="mt-10 flex justify-between">
             <Button className="flex items-center px-6 py-3 bg-gradient-to-r from-[#007acc] to-[#0056b3] text-[#ffffff] rounded-full hover:from-[#0056b3] hover:to-[#003d82] transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#007acc] focus:ring-opacity-50 shadow-lg">
               <GitBranch className="mr-2 w-5 h-5" />
               <span className="text-lg font-medium">{t('新規ブランチ')}</span>
@@ -492,7 +492,9 @@ const VersionControl = () => {
               <GitPullRequest className="mr-2 w-5 h-5" />
               <span className="text-lg font-medium">{t('プルリクエスト')}</span>
             </Button>
-          </div> */}
+          </div>
+
+
         </>
       ) : (
         <>
