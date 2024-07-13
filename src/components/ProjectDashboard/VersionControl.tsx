@@ -108,21 +108,6 @@ const Dialog = ({ children, open, onOpenChange }) => (
   ) : null
 );
 
-const DialogTrigger = ({ children, asChild }) => {
-  return asChild ? children : <button>{children}</button>;
-};
-
-const DialogContent = ({ children, className }) => (
-  <div className={`bg-white p-6 rounded-lg shadow-lg ${className}`}>
-    {children}
-  </div>
-);
-
-const DialogHeader = ({ children }) => <div className="mb-4">{children}</div>;
-const DialogTitle = ({ children }) => <h2 className="text-xl font-bold">{children}</h2>;
-const DialogDescription = ({ children }) => <p className="text-gray-600">{children}</p>;
-const DialogFooter = ({ children }) => <div className="mt-4 flex justify-end">{children}</div>;
-
 // システムディレクトリ選択コンポーネント
 interface SystemDirectorySelectorProps {
   onSelectDirectory: (selectedDirectory: { value: string; label: string; path: string }) => void;
@@ -149,7 +134,7 @@ const SystemDirectorySelector: React.FC<SystemDirectorySelectorProps> = ({ onSel
         value={selectedDirectory}
         className="w-full pl-4 pr-10 py-2 text-lg bg-[#3c3c3c] border-2 border-[#007acc] focus:outline-none focus:ring-2 focus:ring-[#007acc] focus:border-[#007acc] rounded-lg font-sans text-[#ffffff] transition duration-300 ease-in-out"
       >
-        <option value="">{t('システムディレクトリを選択')}</option>
+        <option value="">{t('システムを選択')}</option>
         {options.map(option => (
           <option key={option.value} value={option.value}>{option.label}</option>
         ))}
@@ -410,90 +395,81 @@ const AIChat = React.memo(({ nodes, onClose, position }) => {
           <h2 className="text-3xl font-bold text-[#ffffff] font-sans">
             {選択されたシステム ? 'システム名: '+選択されたシステム : t('システム一覧')}
           </h2>
-          {選択されたシステム && (
-            <Button
-              onClick={() => set選択されたシステム('')}
-              variant="secondary"
-              className="px-4 py-2 bg-[#007acc] text-white rounded-lg hover:bg-[#005fa3] transition duration-300"
-            >
-              {t('ホームに戻る')}
-            </Button>
-          )}
+          <div className="w-64">
+            <SystemDirectorySelector onSelectDirectory={ディレクトリ選択処理} options={directoryOptions} />
+          </div>
         </div>
         
-          <>
-            <SystemDirectorySelector onSelectDirectory={ディレクトリ選択処理} options={directoryOptions} />
-            <div className="relative h-[600px] mb-8">
-              <FileStructure 
-                ファイル構造データ={ファイル構造データ} 
-                onNodeClick={ノード選択処理} 
-                選択されたシステム={選択されたシステム}
+        <>
+          <div className="relative h-[600px] mb-8">
+            <FileStructure 
+              ファイル構造データ={ファイル構造データ} 
+              onNodeClick={ノード選択処理} 
+              選択されたシステム={選択されたシステム}
+            />
+            {選択中ノード && (
+              <AIChat 
+                nodes={[選択中ノード]} 
+                onClose={() => set選択中ノード(null)}
+                position={チャット位置}
               />
-              {選択中ノード && (
-                <AIChat 
-                  nodes={[選択中ノード]} 
-                  onClose={() => set選択中ノード(null)}
-                  position={チャット位置}
-                />
-              )}
-            </div>
-  
-            <div className="mb-8">
-              <label htmlFor="branch-select" className="block text-lg font-medium text-[#e0e0e0] mb-3 font-sans">
-                {t('ブランチ選択')}
-              </label>
-              <select
-                id="branch-select"
-                value={選択中のブランチ}
-                onChange={(e) => set選択中のブランチ(e.target.value)}
-                className="w-full pl-4 pr-10 py-3 text-lg bg-[#3c3c3c] border-2 border-[#007acc] focus:outline-none focus:ring-2 focus:ring-[#007acc] focus:border-[#007acc] rounded-lg font-sans text-[#ffffff] transition duration-300 ease-in-out"
-              >
-                {ブランチ.map((ブランチ名) => (
-                  <option key={ブランチ名} value={ブランチ名}>{ブランチ名}</option>
-                ))}
-              </select>
-            </div>
-  
-            <GitGraph />
-  
-            <div className="mt-10">
-              <h3 className="text-2xl font-bold mb-5 text-[#ffffff] font-sans">{t('最近のコミット')}</h3>
-              <div className="space-y-4">
-                {コミット.map((コミット) => (
-                  <div key={コミット.id} className="flex items-start p-5 bg-gradient-to-r from-[#2d2d2d] to-[#252525] rounded-lg border-l-4 border-[#007acc] shadow-md transition duration-300 ease-in-out hover:shadow-lg">
-                    <GitCommit className="text-[#007acc] mr-4 flex-shrink-0 w-6 h-6" />
-                    <div>
-                      <p className="font-bold text-lg text-[#ffffff] font-sans mb-1">{コミット.メッセージ}</p>
-                      <p className="text-sm text-[#b0b0b0] font-sans">
-                        {t('作成者')} <span className="text-[#007acc]">{コミット.作成者}</span> • {t('日付')} <span className="text-[#007acc]">{コミット.日付}</span>
-                      </p>
-                    </div>
+            )}
+          </div>
+
+          <div className="mb-8">
+            <label htmlFor="branch-select" className="block text-lg font-medium text-[#e0e0e0] mb-3 font-sans">
+              {t('ブランチ選択')}
+            </label>
+            <select
+              id="branch-select"
+              value={選択中のブランチ}
+              onChange={(e) => set選択中のブランチ(e.target.value)}
+              className="w-full pl-4 pr-10 py-3 text-lg bg-[#3c3c3c] border-2 border-[#007acc] focus:outline-none focus:ring-2 focus:ring-[#007acc] focus:border-[#007acc] rounded-lg font-sans text-[#ffffff] transition duration-300 ease-in-out"
+            >
+              {ブランチ.map((ブランチ名) => (
+                <option key={ブランチ名} value={ブランチ名}>{ブランチ名}</option>
+              ))}
+            </select>
+          </div>
+
+          <GitGraph />
+
+          <div className="mt-10">
+            <h3 className="text-2xl font-bold mb-5 text-[#ffffff] font-sans">{t('最近のコミット')}</h3>
+            <div className="space-y-4">
+              {コミット.map((コミット) => (
+                <div key={コミット.id} className="flex items-start p-5 bg-gradient-to-r from-[#2d2d2d] to-[#252525] rounded-lg border-l-4 border-[#007acc] shadow-md transition duration-300 ease-in-out hover:shadow-lg">
+                  <GitCommit className="text-[#007acc] mr-4 flex-shrink-0 w-6 h-6" />
+                  <div>
+                    <p className="font-bold text-lg text-[#ffffff] font-sans mb-1">{コミット.メッセージ}</p>
+                    <p className="text-sm text-[#b0b0b0] font-sans">
+                      {t('作成者')} <span className="text-[#007acc]">{コミット.作成者}</span> • {t('日付')} <span className="text-[#007acc]">{コミット.日付}</span>
+                    </p>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
-  
-            <div className="mt-10 flex justify-between">
-              <Button className="flex items-center px-6 py-3 bg-gradient-to-r from-[#007acc] to-[#0056b3] text-[#ffffff] rounded-full hover:from-[#0056b3] hover:to-[#003d82] transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#007acc] focus:ring-opacity-50 shadow-lg">
-                <GitBranch className="mr-2 w-5 h-5" />
-                <span className="text-lg font-medium">{t('新規ブランチ')}</span>
-              </Button>
-              <Button className="flex items-center px-6 py-3 bg-gradient-to-r from-[#388e3c] to-[#2e7d32] text-[#ffffff] rounded-full hover:from-[#2e7d32] hover:to-[#1b5e20] transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#388e3c] focus:ring-opacity-50 shadow-lg">
-                <GitMerge className="mr-2 w-5 h-5" />
-                <span className="text-lg font-medium">{t('マージ')}</span>
-              </Button>
-              <Button className="flex items-center px-6 py-3 bg-gradient-to-r from-[#0288d1] to-[#01579b] text-[#ffffff] rounded-full hover:from-[#01579b] hover:to-[#01426a] transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#0288d1] focus:ring-opacity-50 shadow-lg">
-                <GitPullRequest className="mr-2 w-5 h-5" />
-                <span className="text-lg font-medium">{t('プルリクエスト')}</span>
-              </Button>
-            </div>
-          </>
+          </div>
+
+          <div className="mt-10 flex justify-between">
+            <Button className="flex items-center px-6 py-3 bg-gradient-to-r from-[#007acc] to-[#0056b3] text-[#ffffff] rounded-full hover:from-[#0056b3] hover:to-[#003d82] transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#007acc] focus:ring-opacity-50 shadow-lg">
+              <GitBranch className="mr-2 w-5 h-5" />
+              <span className="text-lg font-medium">{t('新規ブランチ')}</span>
+            </Button>
+            <Button className="flex items-center px-6 py-3 bg-gradient-to-r from-[#388e3c] to-[#2e7d32] text-[#ffffff] rounded-full hover:from-[#2e7d32] hover:to-[#1b5e20] transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#388e3c] focus:ring-opacity-50 shadow-lg">
+              <GitMerge className="mr-2 w-5 h-5" />
+              <span className="text-lg font-medium">{t('マージ')}</span>
+            </Button>
+            <Button className="flex items-center px-6 py-3 bg-gradient-to-r from-[#0288d1] to-[#01579b] text-[#ffffff] rounded-full hover:from-[#01579b] hover:to-[#01426a] transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#0288d1] focus:ring-opacity-50 shadow-lg">
+              <GitPullRequest className="mr-2 w-5 h-5" />
+              <span className="text-lg font-medium">{t('プルリクエスト')}</span>
+            </Button>
+          </div>
+        </>
       </div>
     );
   };
 
 
-  
-  
-  
+
   export default React.memo(VersionControl);
