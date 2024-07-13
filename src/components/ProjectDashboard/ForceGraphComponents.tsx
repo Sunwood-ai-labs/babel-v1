@@ -9,12 +9,14 @@ export const FileStructure = React.memo(({ onNodeClick, 選択されたシステ
   const fgRef = useRef();
   const { t } = useTranslation();
   const [選択中ノード, set選択中ノード] = useState([]);
-  const [ディレクトリ構造, setディレクトリ構造] = useState(null);
+  const [ディレクトリ構造, setディレクトリ構造] = useState({ nodes: [], links: [] });
   const [読み込み中, set読み込み中] = useState(true);
   const [エラー, setエラー] = useState(null);
   const 変更 = useFileChanges();
   const [選択中構造, set選択中構造] = useState('ファイルツリー');
-  const [検索キーワード, set検索キーワード] = useState('');
+  const [検索クエリ, set検索クエリ] = useState('');
+  const [フィルター済みノード, setフィルター済みノード] = useState([]);
+  const [フィルター済みリンク, setフィルター済みリンク] = useState([]);
 
   const ディレクトリ構造読み込み = useCallback(async () => {
     try {
@@ -23,6 +25,8 @@ export const FileStructure = React.memo(({ onNodeClick, 選択されたシステ
         const データ = await fetchDirectoryStructure(選択されたシステム);
         const 変換済みデータ = transformApiResponse(データ.structure);
         setディレクトリ構造(変換済みデータ);
+        setフィルター済みノード(変換済みデータ.nodes);
+        setフィルター済みリンク(変換済みデータ.links);
       }
     } catch (err) {
       setエラー(err.message);
@@ -106,8 +110,9 @@ export const FileStructure = React.memo(({ onNodeClick, 選択されたシステ
 
   const クリック処理 = useCallback((ノード) => {
     if (fgRef.current) {
-      fgRef.current.centerAt(ノード.x, ノード.y, 1000);
-      fgRef.current.zoom(4, 2000);
+      const fg = fgRef.current;
+      fg.centerAt(ノード.x, ノード.y, 1000);
+      fg.zoom(4, 2000);
     }
     set選択中ノード(前の選択 => {
       const インデックス = 前の選択.findIndex(n => n.id === ノード.id);
@@ -118,22 +123,55 @@ export const FileStructure = React.memo(({ onNodeClick, 選択されたシステ
       }
     });
     onNodeClick(ノード);
-  }, [onNodeClick]);
 
-  const フィルター済みグラフデータ = useMemo(() => {
-    if (!ディレクトリ構造) return { nodes: [], links: [] };
-    const フィルター済みノード = ディレクトリ構造.nodes.filter(ノード =>
-      ノード.name.toLowerCase().includes(検索キーワード.toLowerCase())
-    );
-    const フィルター済みリンク = ディレクトリ構造.links.filter(リンク =>
-      フィルター済みノード.some(ノード => ノード.id === リンク.source) &&
-      フィルター済みノード.some(ノード => ノード.id === リンク.target)
-    );
-    return { nodes: フィルター済みノード, links: フィルター済みリンク };
-  }, [ディレクトリ構造, 検索キーワード]);
+    // ファイルの場合、周囲1リンク先を表示
+    if (ノード.type === 'file') {
+      const 関連ノード = new Set([ノード.id]);
+      ディレクトリ構造.links.forEach(リンク => {
+        if (リンク.source === ノード.id) 関連ノード.add(リンク.target);
+        if (リンク.target === ノード.id) 関連ノード.add(リンク.source);
+      });
+      const 保持するノード = ディレクトリ構造.nodes.filter(n => 関連ノード.has(n.id));
+      const 保持するリンク = ディレクトリ構造.links.filter(l => 
+        関連ノード.has(l.source) && 関連ノード.has(l.target)
+      );
+      setフィルター済みノード(保持するノード);
+      setフィルター済みリンク(保持するリンク);
+    }
+    // ディレクトリの場合、1つ上と下のすべての階層を表示
+    else if (ノード.type === 'directory') {
+      const 親パス = ノード.path.split('/').slice(0, -1).join('/');
+      const 保持するノード = ディレクトリ構造.nodes.filter(n => 
+        n.path.startsWith(親パス) || n.path === 親パス
+      );
+      const 保持するリンク = ディレクトリ構造.links.filter(l => 
+        保持するノード.some(n => n.id === l.source) && 保持するノード.some(n => n.id === l.target)
+      );
+      setフィルター済みノード(保持するノード);
+      setフィルター済みリンク(保持するリンク);
+    }
+  }, [onNodeClick, ディレクトリ構造]);
+
+  const 検索処理 = useCallback((クエリ) => {
+    set検索クエリ(クエリ);
+    if (!クエリ) {
+      setフィルター済みノード(ディレクトリ構造.nodes);
+      setフィルター済みリンク(ディレクトリ構造.links);
+    } else {
+      const フィルター結果 = ディレクトリ構造.nodes.filter(ノード => 
+        (ノード.name && ノード.name.toLowerCase().includes(クエリ.toLowerCase())) ||
+        (ノード.path && ノード.path.toLowerCase().includes(クエリ.toLowerCase()))
+      );
+      setフィルター済みノード(フィルター結果);
+      const 関連リンク = ディレクトリ構造.links.filter(リンク => 
+        フィルター結果.some(n => n.id === リンク.source) && フィルター結果.some(n => n.id === リンク.target)
+      );
+      setフィルター済みリンク(関連リンク);
+    }
+  }, [ディレクトリ構造]);
 
   const フォースグラフ設定 = useMemo(() => ({
-    graphData: フィルター済みグラフデータ,
+    graphData: { nodes: フィルター済みノード, links: フィルター済みリンク },
     nodeLabel: "name",
     nodeAutoColorBy: ノード色取得,
     nodeCanvasObject: (ノード, ctx, グローバルスケール) => {
@@ -153,7 +191,6 @@ export const FileStructure = React.memo(({ onNodeClick, 選択されたシステ
         const 時間 = performance.now() / 1000;
         const 発光半径 = 基本発光半径 + Math.sin(時間 * 1.5) * 2;
         
-        // エラー回避のため、x座標とy座標が有限の数値であることを確認
         if (isFinite(ノード.x) && isFinite(ノード.y)) {
           const グラデーション = ctx.createRadialGradient(ノード.x, ノード.y, 0, ノード.x, ノード.y, 発光半径);
           if (ノード.name === 'meta') {
@@ -195,9 +232,7 @@ export const FileStructure = React.memo(({ onNodeClick, 選択されたシステ
     nodeCanvasObjectMode: () => 'after',
     onNodeClick: クリック処理,
     cooldownTicks: 200,
-    width: 1600,
-    height: 600,
-  }), [フィルター済みグラフデータ, ノード色取得, クリック処理, 選択中ノード]);
+  }), [ノード色取得, クリック処理, 選択中ノード, フィルター済みノード, フィルター済みリンク]);
 
   if (!選択されたシステム) {
     return <div className="flex justify-center items-center h-full text-[#d4d4d4]">{t('システムディレクトリを選択してください')}</div>;
@@ -216,13 +251,6 @@ export const FileStructure = React.memo(({ onNodeClick, 選択されたシステ
       <div className="flex items-center justify-between mb-3 p-3">
         <h3 className="text-lg font-medium text-[#d4d4d4] font-sans">{t('プロジェクト構造')}</h3>
         <div className="flex space-x-2">
-          <input
-            type="text"
-            value={検索キーワード}
-            onChange={(e) => set検索キーワード(e.target.value)}
-            placeholder={t('ファイル名を検索')}
-            className="px-3 py-1 text-sm rounded-md bg-[#2a2a2a] text-[#d4d4d4] border border-[#3c3c3c] focus:outline-none focus:border-[#6c6c6c]"
-          />
           {['ファイルツリー', 'ビジネス構造', '依存関係', 'データ構造', '類似性', '免疫システム', 'マルチメディア'].map((構造) => (
             <button
               key={構造}
@@ -235,6 +263,15 @@ export const FileStructure = React.memo(({ onNodeClick, 選択されたシステ
             </button>
           ))}
         </div>
+      </div>
+      <div className="mb-3 px-3">
+        <input
+          type="text"
+          value={検索クエリ}
+          onChange={(e) => 検索処理(e.target.value)}
+          placeholder={t('ディレクトリ名またはファイル名を検索...')}
+          className="w-full px-3 py-2 bg-[#2a2a2a] text-[#d4d4d4] rounded-md focus:outline-none focus:ring-2 focus:ring-[#4a4a4a]"
+        />
       </div>
       <ForceGraph2D
         ref={fgRef}
@@ -253,3 +290,5 @@ export const FileStructure = React.memo(({ onNodeClick, 選択されたシステ
     </div>
   );
 });
+
+export default FileStructure;
