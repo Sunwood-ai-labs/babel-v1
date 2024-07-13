@@ -29,7 +29,7 @@ const PackageList = () => {
 
   return (
     <div className="bg-gray-100 min-h-screen p-8">
-      <h1 className="text-3xl font-bold mb-8 text-gray-800">{t('マルチメディアリスト')}</h1>
+      <h1 className="text-3xl font-bold mb-8 text-gray-800">{t('マルチメディアアーティファクト')}</h1>
       <div className="mb-6 relative">
         <img src="https://picsum.photos/800/200" alt="マルチメディアバナー" className="w-full h-48 object-cover rounded-lg mb-4" />
         <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 opacity-50 rounded-lg"></div>
