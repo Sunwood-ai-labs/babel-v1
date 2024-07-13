@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
-import { Sunrise, Zap, Settings, BarChart2, Code, Users, Briefcase, Globe, Cloud, Package, List, CreditCard, FileText, MessageSquare, Share2, GitBranch, CheckSquare, Vote, PieChart, Terminal, Edit, Home, Menu, X } from 'lucide-react';
+import { Dna, Sunrise, Zap, Settings, BarChart2, Code, Users, Briefcase, Globe, Cloud, Package, List, CreditCard, FileText, MessageSquare, Share2, GitBranch, CheckSquare, Vote, PieChart, Terminal, Edit, Home, Menu, X } from 'lucide-react';
 import DynamicComponent from '@/components/DynamicComponent';
 
 export default function HomePage() {
@@ -13,7 +13,7 @@ export default function HomePage() {
 
   const sidebarComponents = {
     'システム開発': [
-      { name: 'VersionControl', displayName: '開発エディタ', icon: <GitBranch size={18} />, isActive: true },
+      { name: 'VersionControl', displayName: '開発エディタ', icon: <Dna size={18} />, isActive: true },
       { name: 'SaaSList', displayName: 'システムリスト', icon: <Cloud size={18} />, isActive: true },
       { name: 'PackageList', displayName: 'アーティファクト', icon: <Package size={18} />, isActive: true },
     ],
@@ -74,9 +74,9 @@ export default function HomePage() {
                           </div>
                           <h3 className="text-2xl font-semibold text-amber-300" style={{fontFamily: 'Noto Sans JP, sans-serif'}}>{t(item.displayName)}</h3>
                         </div>
-                        {/* <p className="text-amber-100 mb-6" style={{fontFamily: 'Noto Sans JP, sans-serif'}}>
+                        <p className="text-amber-100 mb-6" style={{fontFamily: 'Noto Sans JP, sans-serif'}}>
                           {t(`${item.name}Description`)}
-                        </p> */}
+                        </p>
                         <button className="text-amber-400 hover:text-amber-300 transition-colors duration-200" style={{fontFamily: 'Noto Sans JP, sans-serif'}}>
                           詳細を見る →
                         </button>
