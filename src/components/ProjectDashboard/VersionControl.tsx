@@ -6,6 +6,8 @@ import { useVersionControlData } from '../../hooks/useVersionControlData';
 import { withoutAuthor } from '../../utils/gitGraphTemplate';
 import { getDummyData } from '../../constants/dummyData';
 import { FileStructure } from './ForceGraphComponents';
+import { useSearchParams } from 'next/navigation';
+
 
 // 新しいシステム作成ダイアログコンポーネント
 // const CreateSystemDialog = ({ isOpen, onClose, onCreate }: { isOpen: boolean; onClose: () => void; onCreate: (name: string) => void }) => {
@@ -40,7 +42,7 @@ import { FileStructure } from './ForceGraphComponents';
 //       onClose();
 //     } catch (err) {
 //       console.error('システム作成エラー:', err);
-//       setError(t('システムの作成に失敗しました。もう一度お試しください。'));
+//       setError(t('システムの作成に失敗しました。もう一度お試しく���さい。'));
 //     } finally {
 //       setIsCreating(false);
 //     }
@@ -291,7 +293,7 @@ const AIChat = React.memo(({ nodes, onClose, position }) => {
     );
   });
   
-  const VersionControl = () => {
+  export function VersionControl() {
     const { t } = useTranslation();
     const { コミット, ブランチ, 選択中のブランチ, set選択中のブランチ } = useVersionControlData();
     const { ダミーディレクトリ構造, ファイル } = useMemo(() => getDummyData(), []);
@@ -389,9 +391,18 @@ const AIChat = React.memo(({ nodes, onClose, position }) => {
   
       } catch (error) {
         console.error('システムの作成に失敗しました:', error);
-        alert(t('システムの作成に失敗しました。もう一度お試しください。'));
+        alert(t('システムの作成に失敗しまし���。もう一度お試しください。'));
       }
     };
+  
+    const searchParams = useSearchParams();
+
+    useEffect(() => {
+      const systemFromUrl = searchParams.get('system');
+      if (systemFromUrl) {
+        set選択されたシステム(decodeURIComponent(systemFromUrl));
+      }
+    }, [searchParams]);
   
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#2a2a2a] to-[#1e1e1e] text-[#e0e0e0] p-8">

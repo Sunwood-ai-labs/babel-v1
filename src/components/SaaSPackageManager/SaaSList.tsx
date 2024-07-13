@@ -7,9 +7,12 @@ import SaaSCard from './components/SaaSCard';
 import SearchBar from './components/SearchBar';
 import useSaaSData from './hooks/useSaaSData';
 import VersionControl from '../ProjectDashboard/VersionControl';
+import { useRouter } from 'next/navigation';
 
 
 const SaaSList = () => {
+  const router = useRouter();
+
   const { t } = useTranslation();
   const { saasItems, addSaaSItem } = useSaaSData();
   const [searchTerm, setSearchTerm] = useState('');
@@ -48,8 +51,11 @@ const SaaSList = () => {
   };
 
   const handleSaaSClick = (saas: any) => {
-    // VersionControlコンポーネントに遷移する
-    setSelectedComponent('VersionControl');
+    const encodedSystemName = encodeURIComponent(saas.name);
+    const url = `/development/editor?system=${encodedSystemName}`;
+    
+    // 新しいタブで開く
+    window.open(url, '_blank');
   };
 
   const handleAddNew = () => {
