@@ -180,7 +180,7 @@ export const FileStructure = React.memo(({ onNodeClick, 選択されたシステ
       <div className="flex items-center justify-between mb-3 p-3">
         <h3 className="text-lg font-medium text-[#d4d4d4] font-sans">{t('プロジェクト構造')}</h3>
         <div className="flex space-x-2">
-          {['ファイルツリー', 'ビジネス構造', '依存関係', 'データ構造', '類似性'].map((構造) => (
+          {['ファイルツリー', 'ビジネス構造', '依存関係', 'データ構造', '類似性', '免疫システム'].map((構造) => (
             <button
               key={構造}
               onClick={() => set選択中構造(構造)}
