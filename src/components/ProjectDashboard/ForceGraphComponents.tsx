@@ -13,6 +13,7 @@ export const FileStructure = React.memo(({ onNodeClick, 選択されたシステ
   const [読み込み中, set読み込み中] = useState(true);
   const [エラー, setエラー] = useState(null);
   const 変更 = useFileChanges();
+  const [選択中構造, set選択中構造] = useState('ファイルツリー');
 
   const ディレクトリ構造読み込み = useCallback(async () => {
     try {
@@ -176,7 +177,22 @@ export const FileStructure = React.memo(({ onNodeClick, 選択されたシステ
 
   return (
     <div className="h-[600px] border border-[#3c3c3c] rounded-md overflow-hidden bg-[#1e1e1e]">
-      <h3 className="text-lg font-medium mb-3 text-[#d4d4d4] font-sans p-3">{t('ファイル構造')}</h3>
+      <div className="flex items-center justify-between mb-3 p-3">
+        <h3 className="text-lg font-medium text-[#d4d4d4] font-sans">{t('プロジェクト構造')}</h3>
+        <div className="flex space-x-2">
+          {['ファイルツリー', 'ビジネス構造', '依存関係', 'データ構造', '類似性'].map((構造) => (
+            <button
+              key={構造}
+              onClick={() => set選択中構造(構造)}
+              className={`px-3 py-1 text-sm rounded-md transition-colors ${
+                選択中構造 === 構造 ? 'bg-[#4a4a4a] text-white' : 'bg-[#2a2a2a] text-[#a0a0a0] hover:bg-[#3a3a3a]'
+              }`}
+            >
+              {t(構造)}
+            </button>
+          ))}
+        </div>
+      </div>
       <ForceGraph2D
         ref={fgRef}
         {...フォースグラフ設定}

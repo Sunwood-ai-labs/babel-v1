@@ -494,7 +494,7 @@ async def create_new_system(name: str):
     os.makedirs(new_dir_path, exist_ok=True)
     
     # 基本的なサブディレクトリを作成
-    subdirs = ['exe_history', 'frontend', 'backend', 'middleware', 'docs', 'tests', 'resources', 'database', 'logs']
+    subdirs = ['exe_history', 'frontend', 'backend', 'middleware', 'docs', 'tests', 'resources', 'database', 'logs', 'locales']
     for subdir in subdirs:
         subdir_path = os.path.join(new_dir_path, subdir)
         os.makedirs(subdir_path, exist_ok=True)
@@ -512,17 +512,17 @@ async def create_new_system(name: str):
     # 設定ファイルを作成
     config_path = os.path.join(new_dir_path, "config.json")
     with open(config_path, "w") as f:
-        json.dump({"system_name": name, "version": "1.0.0"}, f, indent=2)
+        json.dump({"system_name": name, "version": "1.0.0", "supported_languages": ["ja", "en"]}, f, indent=2)
     
     # 依存関係ファイルを作成
     requirements_path = os.path.join(new_dir_path, "requirements.txt")
     with open(requirements_path, "w") as f:
-        f.write("# Pythonの依存パッケージをここにリストアップ\n")
+        f.write("# Pythonの依存パッケージをここにリストアップ\ni18n\n")
     
     # 初期化スクリプトを作成
     init_script_path = os.path.join(new_dir_path, "init.py")
     with open(init_script_path, "w") as f:
-        f.write("# システムの初期化処理をここに記述\n")
+        f.write("# システムの初期化処理をここに記述\n# i18n設定\nfrom i18n import load_path, set as set_i18n\nload_path.append('./locales')\nset_i18n('locale', 'ja')\n")
     
     # CI/CD設定ファイルを作成
     ci_dir_path = os.path.join(new_dir_path, ".github", "workflows")
@@ -534,7 +534,7 @@ async def create_new_system(name: str):
     # 環境変数テンプレートファイルを作成
     env_template_path = os.path.join(new_dir_path, ".env.example")
     with open(env_template_path, "w") as f:
-        f.write("# 環境変数のテンプレート\nAPI_KEY=your_api_key_here\nDEBUG=False\n")
+        f.write("# 環境変数のテンプレート\nAPI_KEY=your_api_key_here\nDEBUG=False\nDEFAULT_LANGUAGE=ja\n")
     
     # .gitignoreファイルを作成
     gitignore_path = os.path.join(new_dir_path, ".gitignore")
@@ -545,6 +545,18 @@ async def create_new_system(name: str):
     license_path = os.path.join(new_dir_path, "LICENSE")
     with open(license_path, "w") as f:
         f.write("MIT License\n\nCopyright (c) 2024 Your Name\n\n...")
+    
+    # 多言語サポートのためのロケールファイルを作成
+    locales_dir = os.path.join(new_dir_path, "locales")
+    for lang in ["ja", "en"]:
+        lang_dir = os.path.join(locales_dir, lang)
+        os.makedirs(lang_dir, exist_ok=True)
+        translation_file = os.path.join(lang_dir, "translation.json")
+        with open(translation_file, "w") as f:
+            json.dump({
+                "welcome": "ようこそ" if lang == "ja" else "Welcome",
+                "goodbye": "さようなら" if lang == "ja" else "Goodbye"
+            }, f, ensure_ascii=False, indent=2)
     
     logger.info(f"新しいシステム '{name}' を作成しました。パス: {new_dir_path}")
     return {"message": f"新しいシステム '{name}' の作成に成功しました", "path": new_dir_path}
