@@ -9,11 +9,14 @@ export const FileStructure = React.memo(({ onNodeClick, 選択されたシステ
   const fgRef = useRef();
   const { t } = useTranslation();
   const [選択中ノード, set選択中ノード] = useState([]);
-  const [ディレクトリ構造, setディレクトリ構造] = useState(null);
+  const [ディレクトリ構造, setディレクトリ構造] = useState({ nodes: [], links: [] });
   const [読み込み中, set読み込み中] = useState(true);
   const [エラー, setエラー] = useState(null);
   const 変更 = useFileChanges();
   const [選択中構造, set選択中構造] = useState('ファイルツリー');
+  const [検索クエリ, set検索クエリ] = useState('');
+  const [フィルター済みノード, setフィルター済みノード] = useState([]);
+  const [フィルター済みリンク, setフィルター済みリンク] = useState([]);
 
   const ディレクトリ構造読み込み = useCallback(async () => {
     try {
@@ -22,6 +25,8 @@ export const FileStructure = React.memo(({ onNodeClick, 選択されたシステ
         const データ = await fetchDirectoryStructure(選択されたシステム);
         const 変換済みデータ = transformApiResponse(データ.structure);
         setディレクトリ構造(変換済みデータ);
+        setフィルター済みノード(変換済みデータ.nodes);
+        setフィルター済みリンク(変換済みデータ.links);
       }
     } catch (err) {
       setエラー(err.message);
@@ -44,7 +49,20 @@ export const FileStructure = React.memo(({ onNodeClick, 選択されたシステ
 
   const ノード色取得 = useCallback((ノード) => {
     if (ノード.type === 'directory') {
-      return 'rgba(0, 150, 255, 0.8)';
+      const 特殊ディレクトリ色 = {
+        'exe_history': 'rgba(255, 99, 71, 0.8)',  // トマト
+        'frontend': 'rgba(65, 105, 225, 0.8)',    // ロイヤルブルー
+        'backend': 'rgba(50, 205, 50, 0.8)',      // ライムグリーン
+        'middleware': 'rgba(255, 165, 0, 0.8)',   // オレンジ
+        'docs': 'rgba(138, 43, 226, 0.8)',        // ブルーバイオレット
+        'tests': 'rgba(255, 20, 147, 0.8)',       // ディープピンク
+        'resources': 'rgba(0, 191, 255, 0.8)',    // ディープスカイブルー
+        'database': 'rgba(255, 215, 0, 0.8)',     // ゴールド
+        'logs': 'rgba(169, 169, 169, 0.8)',       // ダークグレー
+        'locales': 'rgba(0, 250, 154, 0.8)',      // メディウムスプリンググリーン
+        'meta': 'rgba(255, 215, 0, 1)'            // 純金色
+      };
+      return 特殊ディレクトリ色[ノード.name] || 'rgba(0, 150, 255, 0.8)';
     }
     const 拡張子 = ノード.name.split('.').pop().toLowerCase();
     switch (拡張子) {
@@ -91,10 +109,41 @@ export const FileStructure = React.memo(({ onNodeClick, 選択されたシステ
   }, []);
 
   const クリック処理 = useCallback((ノード) => {
+    console.log('クリックされたノード:', ノード);
     if (fgRef.current) {
-      fgRef.current.centerAt(ノード.x, ノード.y, 1000);
-      fgRef.current.zoom(4, 2000);
+      const fg = fgRef.current;
+      fg.zoom(4, 2000);
     }
+
+    // 強調表示するノードとリンクを格納するSetを作成
+    const 強調ノード = new Set();
+    const 強調リンク = new Set();
+
+    // クリックされたノードを強調表示に追加
+    強調ノード.add(ノード);
+
+    // クリックされたノードの隣接ノードとリンクを強調表示に追加
+    ディレクトリ構造.links.forEach(リンク => {
+      if (typeof リンク.source === 'object' && typeof リンク.target === 'object') {
+        if (リンク.source.id === ノード.id || リンク.target.id === ノード.id) {
+          強調リンク.add(リンク);
+          const 隣接ノード = リンク.source.id === ノード.id ? リンク.target : リンク.source;
+          強調ノード.add(隣接ノード);
+        }
+      } else {
+        console.error('リンクのsourceまたはtargetが予期しない形式です:', リンク);
+      }
+    });
+
+    // 強調表示するノードとリンクをフィルタリング
+    const フィルター済みノード = ディレクトリ構造.nodes.filter(n => 強調ノード.has(n));
+    const フィルター済みリンク = ディレクトリ構造.links.filter(l => 強調リンク.has(l));
+
+    // フィルタリングされたノードとリンクを設定
+    setフィルター済みノード(フィルター済みノード);
+    setフィルター済みリンク(フィルター済みリンク);
+
+    // 選択中ノードの更新
     set選択中ノード(前の選択 => {
       const インデックス = 前の選択.findIndex(n => n.id === ノード.id);
       if (インデックス > -1) {
@@ -103,11 +152,28 @@ export const FileStructure = React.memo(({ onNodeClick, 選択されたシステ
         return [...前の選択, ノード];
       }
     });
-    onNodeClick(ノード);
-  }, [onNodeClick]);
+  }, [ディレクトリ構造]);
+
+  const 検索処理 = useCallback((クエリ) => {
+    set検索クエリ(クエリ);
+    if (!クエリ) {
+      setフィルター済みノード(ディレクトリ構造.nodes);
+      setフィルター済みリンク(ディレクトリ構造.links);
+    } else {
+      const フィルター結果 = ディレクトリ構造.nodes.filter(ノード => 
+        (ノード.name && ノード.name.toLowerCase().includes(クエリ.toLowerCase())) ||
+        (ノード.path && ノード.path.toLowerCase().includes(クエリ.toLowerCase()))
+      );
+      setフィルター済みノード(フィルター結果);
+      const 関連リンク = ディレクトリ構造.links.filter(リンク => 
+        フィルター結果.some(n => n.id === リンク.source) && フィルター結果.some(n => n.id === リンク.target)
+      );
+      setフィルター済みリンク(関連リンク);
+    }
+  }, [ディレクトリ構造]);
 
   const フォースグラフ設定 = useMemo(() => ({
-    graphData: ディレクトリ構造 || { nodes: [], links: [] },
+    graphData: { nodes: フィルター済みノード, links: フィルター済みリンク },
     nodeLabel: "name",
     nodeAutoColorBy: ノード色取得,
     nodeCanvasObject: (ノード, ctx, グローバルスケール) => {
@@ -122,23 +188,32 @@ export const FileStructure = React.memo(({ onNodeClick, 選択されたシステ
       ctx.fillStyle = ノード色取得(ノード);
       ctx.fill();
 
-      if (選択中ノード.some(n => n.id === ノード.id)) {
+      if (選択中ノード.some(n => n.id === ノード.id) || ノード.name === 'meta') {
         const 基本発光半径 = ノード.type === 'directory' ? 8 : 6;
         const 時間 = performance.now() / 1000;
         const 発光半径 = 基本発光半径 + Math.sin(時間 * 1.5) * 2;
-        const グラデーション = ctx.createRadialGradient(ノード.x, ノード.y, 0, ノード.x, ノード.y, 発光半径);
-        グラデーション.addColorStop(0, `rgba(255, 255, 255, ${0.8 + Math.sin(時間 * 1.5) * 0.2})`);
-        グラデーション.addColorStop(0.5, `rgba(255, 255, 255, ${0.4 + Math.sin(時間 * 1.5) * 0.1})`);
-        グラデーション.addColorStop(1, 'rgba(255, 255, 255, 0)');
-        ctx.beginPath();
-        ctx.arc(ノード.x, ノード.y, 発光半径, 0, 2 * Math.PI);
-        ctx.fillStyle = グラデーション;
-        ctx.fill();
+        
+        if (isFinite(ノード.x) && isFinite(ノード.y)) {
+          const グラデーション = ctx.createRadialGradient(ノード.x, ノード.y, 0, ノード.x, ノード.y, 発光半径);
+          if (ノード.name === 'meta') {
+            グラデーション.addColorStop(0, `rgba(255, 215, 0, ${0.8 + Math.sin(時間 * 1.5) * 0.2})`);
+            グラデーション.addColorStop(0.5, `rgba(255, 215, 0, ${0.4 + Math.sin(時間 * 1.5) * 0.1})`);
+            グラデーション.addColorStop(1, 'rgba(255, 215, 0, 0)');
+          } else {
+            グラデーション.addColorStop(0, `rgba(255, 255, 255, ${0.8 + Math.sin(時間 * 1.5) * 0.2})`);
+            グラデーション.addColorStop(0.5, `rgba(255, 255, 255, ${0.4 + Math.sin(時間 * 1.5) * 0.1})`);
+            グラデーション.addColorStop(1, 'rgba(255, 255, 255, 0)');
+          }
+          ctx.beginPath();
+          ctx.arc(ノード.x, ノード.y, 発光半径, 0, 2 * Math.PI);
+          ctx.fillStyle = グラデーション;
+          ctx.fill();
+        }
 
         ctx.beginPath();
         const 円の半径 = ノード.type === 'directory' ? 6 : 4;
         ctx.arc(ノード.x, ノード.y, 円の半径, 0, 2 * Math.PI);
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+        ctx.strokeStyle = ノード.name === 'meta' ? 'rgba(255, 215, 0, 0.8)' : 'rgba(255, 255, 255, 0.8)';
         ctx.lineWidth = 2;
         ctx.stroke();
       }
@@ -158,10 +233,11 @@ export const FileStructure = React.memo(({ onNodeClick, 選択されたシステ
     linkColor: () => 'rgba(255, 255, 255, 0.1)',
     nodeCanvasObjectMode: () => 'after',
     onNodeClick: クリック処理,
-    cooldownTicks: 200,
+    cooldownTicks: 1000,
+    cooldownTime: 15000,
     width: 1600,
     height: 600,
-  }), [ディレクトリ構造, ノード色取得, クリック処理, 選択中ノード]);
+  }), [ノード色取得, クリック処理, 選択中ノード, フィルター済みノード, フィルター済みリンク]);
 
   if (!選択されたシステム) {
     return <div className="flex justify-center items-center h-full text-[#d4d4d4]">{t('システムディレクトリを選択してください')}</div>;
@@ -180,7 +256,14 @@ export const FileStructure = React.memo(({ onNodeClick, 選択されたシステ
       <div className="flex items-center justify-between mb-3 p-3">
         <h3 className="text-lg font-medium text-[#d4d4d4] font-sans">{t('プロジェクト構造')}</h3>
         <div className="flex space-x-2">
-          {['ファイルツリー', 'ビジネス構造', '依存関係', 'データ構造', '類似性', '免疫システム'].map((構造) => (
+          <input
+            type="text"
+            value={検索クエリ}
+            onChange={(e) => 検索処理(e.target.value)}
+            placeholder={t('ファイル名を検索')}
+            className="px-3 py-1 text-sm rounded-md bg-[#2a2a2a] text-[#d4d4d4] border border-[#3c3c3c] focus:outline-none focus:border-[#6c6c6c]"
+          />
+          {['ファイルツリー', 'ビジネス構造', '依存関係', 'データ構造', '類似性', '免疫システム', 'マルチメディア'].map((構造) => (
             <button
               key={構造}
               onClick={() => set選択中構造(構造)}

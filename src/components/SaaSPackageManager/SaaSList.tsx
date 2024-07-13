@@ -6,8 +6,13 @@ import Tower from './components/Icons/Tower';
 import SaaSCard from './components/SaaSCard';
 import SearchBar from './components/SearchBar';
 import useSaaSData from './hooks/useSaaSData';
+import VersionControl from '../ProjectDashboard/VersionControl';
+import { useRouter } from 'next/navigation';
+
 
 const SaaSList = () => {
+  const router = useRouter();
+
   const { t } = useTranslation();
   const { saasItems, addSaaSItem } = useSaaSData();
   const [searchTerm, setSearchTerm] = useState('');
@@ -45,12 +50,12 @@ const SaaSList = () => {
     );
   };
 
-  const handleSaaSClick = (saas) => {
-    if (saas.url && saas.url !== '#') {
-      window.open(saas.url, '_blank');
-    } else {
-      setSelectedSaaS(saas);
-    }
+  const handleSaaSClick = (saas: any) => {
+    const encodedSystemName = encodeURIComponent(saas.name);
+    const url = `/development/editor?system=${encodedSystemName}`;
+    
+    // 新しいタブで開く
+    window.open(url, '_blank');
   };
 
   const handleAddNew = () => {
@@ -120,7 +125,7 @@ const SaaSList = () => {
       </div>
       {isAddingNew && (
         <form onSubmit={handleSubmit} className="mb-6 bg-white p-6 rounded-lg shadow-md">
-          <h3 className="text-xl font-bold mb-4 text-indigo-800">新しいシステムを追加</h3>
+          <h3 className="text-xl font-bold mb-4 text-indigo-800">新しいシステムを生成</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <input
               type="text"
@@ -139,7 +144,7 @@ const SaaSList = () => {
               required
             >
               <option value="">カテゴリーを選択</option>
-              {['基盤層', '中間層', '上層', '頂上層', '天空層'].map((category) => (
+              {['インフラストラクチャ層', 'ミドルウェア層', 'サービス層', 'アプリケーション層', 'ユーザーインターフェース層'].map((category) => (
                 <option key={category} value={category}>{category}</option>
               ))}
             </select>

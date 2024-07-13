@@ -38,7 +38,7 @@ async def broadcast_changes():
         if file_handler.changes:
             changes = list(file_handler.changes)
             message = {"changes": [{"type": change[0], "path": change[1]} for change in changes]}
-            print(message)
+            # print(message)
             file_handler.changes.clear()
             for client in connected_clients:
                 await client.send_json(message)
