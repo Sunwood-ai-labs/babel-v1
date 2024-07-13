@@ -137,8 +137,38 @@ export function VersionControl() {
     set選択されたシステム('');
     setIsCreateSystemDialogOpen(true);
 
+    // システム名入力用のカードを表示
+    const システム名入力カード = document.createElement('div');
+    システム名入力カード.innerHTML = `
+      <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+        <h3>新しいシステムの作成</h3>
+        <p>システム名を入力してください（アルファベット推奨）:</p>
+        <input type="text" id="システム名入力" style="width: 100%; padding: 5px; margin-bottom: 10px;">
+        <button id="作成ボタン" style="background-color: #007bff; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">作成</button>
+        <button id="キャンセルボタン" style="background-color: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; margin-left: 10px;">キャンセル</button>
+      </div>
+    `;
+    document.body.appendChild(システム名入力カード);
+
+    const システム名 = await new Promise((resolve) => {
+      document.getElementById('作成ボタン').addEventListener('click', () => {
+        const 入力値 = document.getElementById('システム名入力').value;
+        document.body.removeChild(システム名入力カード);
+        resolve(入力値);
+      });
+      document.getElementById('キャンセルボタン').addEventListener('click', () => {
+        document.body.removeChild(システム名入力カード);
+        resolve(null);
+      });
+    });
+
+    if (!システム名) {
+      console.log('システム作成がキャンセルされました。');
+      return;
+    }
+
     // APIにPOSTリクエストを送信
-    const response = await fetch(`http://localhost:8000/create_new_system?name=${encodeURIComponent('aaa')}`, {
+    const response = await fetch(`http://localhost:8000/create_new_system?name=${encodeURIComponent(システム名)}`, {
       method: 'POST',
       headers: {
         'accept': 'application/json'
@@ -149,9 +179,8 @@ export function VersionControl() {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-
     // 新しいシステムが作成された後に、指定されたURLでエディタを開く処理を追加
-    window.open(`http://localhost:3001/development/editor?system=${encodeURIComponent('aaa')}`, '_blank');
+    window.open(`http://localhost:3001/development/editor?system=${encodeURIComponent(システム名)}`, '_blank');
 
     const result = await response.json();
     console.log('新しいシステムが作成されました:', result);
