@@ -1,12 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    appDir: true,
-  },
-  i18n: {
-    defaultLocale: 'ja',
-    locales: ['ja', 'en'],
-  },
+  reactStrictMode: true,
+  // experimental: { appDir: true } の行を削除または以下のようにコメントアウト
+  // experimental: { appDir: true },
 }
 
 module.exports = nextConfig
