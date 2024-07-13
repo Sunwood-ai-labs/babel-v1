@@ -9,74 +9,6 @@ import { FileStructure } from './ForceGraphComponents';
 import { useSearchParams } from 'next/navigation';
 
 
-// 新しいシステム作成ダイアログコンポーネント
-// const CreateSystemDialog = ({ isOpen, onClose, onCreate }: { isOpen: boolean; onClose: () => void; onCreate: (name: string) => void }) => {
-//   const { t } = useTranslation();
-//   const [newSystemName, setNewSystemName] = useState('');
-//   const [isCreating, setIsCreating] = useState(false);
-//   const [error, setError] = useState('');
-
-//   const handleCreate = async () => {
-//     if (newSystemName.trim() === '') {
-//       setError(t('システム名を入力してください'));
-//       return;
-//     }
-//     setIsCreating(true);
-//     setError('');
-//     try {
-//       // APIにPOSTリクエストを送信
-//       const response = await fetch(`http://localhost:8000/create_new_system?name=${encodeURIComponent(newSystemName)}`, {
-//         method: 'POST',
-//         headers: {
-//           'accept': 'application/json'
-//         }
-//       });
-
-//       if (!response.ok) {
-//         throw new Error('APIリクエストが失敗しました');
-//       }
-
-//       const result = await response.json();
-//       console.log(result);
-
-//       onClose();
-//     } catch (err) {
-//       console.error('システム作成エラー:', err);
-//       setError(t('システムの作成に失敗しました。もう一度お試しく���さい。'));
-//     } finally {
-//       setIsCreating(false);
-//     }
-//   };
-
-//   return (
-//     <Dialog open={isOpen} onOpenChange={onClose}>
-//       <DialogContent className="bg-gradient-to-br from-[#1a1a2e] to-[#16213e] text-[#e0e0e0] border-[#4a00e0] rounded-xl shadow-2xl">
-//         <DialogHeader>
-//           <DialogTitle className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#7f00ff] to-[#e100ff]">
-//             {t('新規システム作成')}
-//           </DialogTitle>
-//         </DialogHeader>
-//         <Input
-//           type="text"
-//           placeholder={t('システム名')}
-//           value={newSystemName}
-//           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewSystemName(e.target.value)}
-//           className="w-full pl-4 pr-4 py-3 text-lg bg-[#2a2a4a] border-2 border-[#4a00e0] focus:outline-none focus:ring-2 focus:ring-[#7f00ff] focus:border-[#7f00ff] rounded-lg font-sans text-[#ffffff] transition duration-300 ease-in-out placeholder-[#8a8a9a]"
-//         />
-//         {error && <p className="text-red-500 mt-2">{error}</p>}
-//         <DialogFooter>
-//           <Button 
-//             onClick={handleCreate} 
-//             disabled={isCreating}
-//             className="px-6 py-3 bg-gradient-to-r from-[#7f00ff] to-[#e100ff] text-[#ffffff] rounded-lg hover:from-[#9500ff] hover:to-[#ff00ff] transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#7f00ff] focus:ring-opacity-50 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-//           >
-//             {isCreating ? t('作成中...') : t('作成')}
-//           </Button>
-//         </DialogFooter>
-//       </DialogContent>
-//     </Dialog>
-//   );
-// };
 
 // Button コンポーネント
 const Button = ({ children, className, ...props }) => (
@@ -200,9 +132,29 @@ export function VersionControl() {
     set選択されたシステム(選択されたディレクトリ.value);
   };
 
-  const 新規システム作成処理 = () => {
+  const 新規システム作成処理 = async () => {
+    console.log('新規システム作成処理');
     set選択されたシステム('');
     setIsCreateSystemDialogOpen(true);
+
+    // APIにPOSTリクエストを送信
+    const response = await fetch(`http://localhost:8000/create_new_system?name=${encodeURIComponent('aaa')}`, {
+      method: 'POST',
+      headers: {
+        'accept': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+
+    // 新しいシステムが作成された後に、指定されたURLでエディタを開く処理を追加
+    window.open(`http://localhost:3001/development/editor?system=${encodeURIComponent('aaa')}`, '_blank');
+
+    const result = await response.json();
+    console.log('新しいシステムが作成されました:', result);
   };
 
   useEffect(() => {
