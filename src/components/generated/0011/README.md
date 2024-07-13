@@ -14,3 +14,4 @@
 - database
 - logs
 - locales
+- meta
