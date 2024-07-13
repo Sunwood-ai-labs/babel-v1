@@ -125,7 +125,7 @@ const SaaSList = () => {
       </div>
       {isAddingNew && (
         <form onSubmit={handleSubmit} className="mb-6 bg-white p-6 rounded-lg shadow-md">
-          <h3 className="text-xl font-bold mb-4 text-indigo-800">新しいシステムを追加</h3>
+          <h3 className="text-xl font-bold mb-4 text-indigo-800">新しいシステムを生成</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <input
               type="text"

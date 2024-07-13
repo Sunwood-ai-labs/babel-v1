@@ -391,7 +391,7 @@ const AIChat = React.memo(({ nodes, onClose, position }) => {
   
       } catch (error) {
         console.error('システムの作成に失敗しました:', error);
-        alert(t('システムの作成に失敗しまし���。もう一度お試しください。'));
+        alert(t('システムの作成に失敗しました。もう一度お試しください。'));
       }
     };
   
@@ -407,7 +407,9 @@ const AIChat = React.memo(({ nodes, onClose, position }) => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#2a2a2a] to-[#1e1e1e] text-[#e0e0e0] p-8">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-3xl font-bold text-[#ffffff] font-sans">{t('システム一覧')}</h2>
+          <h2 className="text-3xl font-bold text-[#ffffff] font-sans">
+            {選択されたシステム ? 'システム名: '+選択されたシステム : t('システム一覧')}
+          </h2>
           {選択されたシステム && (
             <Button
               onClick={() => set選択されたシステム('')}
