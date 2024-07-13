@@ -494,7 +494,8 @@ async def create_new_system(name: str):
     os.makedirs(new_dir_path, exist_ok=True)
     
     # 基本的なサブディレクトリを作成
-    subdirs = ['exe_history', 'frontend', 'backend', 'middleware', 'docs', 'tests', 'resources', 'database', 'logs', 'locales']
+    subdirs = ['exe_history', 'frontend', 'backend', 'middleware', 'docs', 'tests', 'resources', 'database', 'logs', 'locales', 'meta']
+    # exe_historyには、実行履歴と、各種ファイルの要約が入る
     for subdir in subdirs:
         subdir_path = os.path.join(new_dir_path, subdir)
         os.makedirs(subdir_path, exist_ok=True)

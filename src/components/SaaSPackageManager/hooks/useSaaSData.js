@@ -3,15 +3,27 @@ import { useState, useEffect } from 'react';
 import fetchThumbnail from '../utils/thumbnailFetcher';
 
 const fetchSaaSItems = async () => {
-  // APIシミュレーション
-  const dummyData = [
-    { id: 1, name: 'Share Artifacts', category: '基盤層', status: 'アクティブ', level: 1, description: 'Claude Archfact本家の保管庫！', image: 'https://www.share-artifacts.com/ogp.png', url: 'https://www.share-artifacts.com/' },
-    { id: 2, name: 'Midjourney ShowCase', category: '中間層', status: 'アクティブ', level: 2, description: 'AIを使って驚くべき画像を生成！', image: 'https://picsum.photos/400/300?random=2', url: 'https://www.midjourney.com/showcase' },
-    { id: 3, name: '未来予測プロジェクト管理', category: '上層', status: 'アクティブ', level: 3, description: 'プロジェクトの結末が見える！', image: 'https://picsum.photos/400/300?random=3', url: '#' },
-    { id: 4, name: '脳波同期学習システム', category: '頂上層', status: '非アクティブ', level: 4, description: '寝ている間に知識がインストール！', image: 'https://picsum.photos/400/300?random=4', url: '#' },
-    { id: 5, name: '全知全能AIアシスタント', category: '天空層', status: 'アクティブ', level: 5, description: '神にも匹敵する知恵を授かれ！', image: 'https://picsum.photos/400/300?random=5', url: '#' },
-  ];
-  return dummyData;
+  try {
+    const response = await fetch('http://localhost:8000/api/generated-dirs');
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    console.log('取得したデータ:', data);
+    return data.map((dir, index) => ({
+      id: index + 1,
+      name: dir.name,
+      category: 'インフラストラクチャ層', // カテゴリーはデフォルト値を設定
+      status: 'アクティブ',
+      level: Math.floor(Math.random() * 5) + 1,
+      description: `${dir.name}の説明`, // 説明はデフォルト値を設定
+      image: `https://picsum.photos/400/300?random=magic${dir.name}`,
+      url: dir.path
+    }));
+  } catch (error) {
+    console.error('生成されたディレクトリの取得に失敗しました:', error);
+    return []; // エラー時は空の配列を返す
+  }
 };
 
 const useSaaSData = () => {
