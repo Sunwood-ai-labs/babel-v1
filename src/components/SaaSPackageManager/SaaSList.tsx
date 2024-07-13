@@ -6,6 +6,8 @@ import Tower from './components/Icons/Tower';
 import SaaSCard from './components/SaaSCard';
 import SearchBar from './components/SearchBar';
 import useSaaSData from './hooks/useSaaSData';
+import VersionControl from '../ProjectDashboard/VersionControl';
+
 
 const SaaSList = () => {
   const { t } = useTranslation();
@@ -45,12 +47,9 @@ const SaaSList = () => {
     );
   };
 
-  const handleSaaSClick = (saas) => {
-    if (saas.url && saas.url !== '#') {
-      window.open(saas.url, '_blank');
-    } else {
-      setSelectedSaaS(saas);
-    }
+  const handleSaaSClick = (saas: any) => {
+    // VersionControlコンポーネントに遷移する
+    setSelectedComponent('VersionControl');
   };
 
   const handleAddNew = () => {
@@ -139,7 +138,7 @@ const SaaSList = () => {
               required
             >
               <option value="">カテゴリーを選択</option>
-              {['基盤層', '中間層', '上層', '頂上層', '天空層'].map((category) => (
+              {['インフラストラクチャ層', 'ミドルウェア層', 'サービス層', 'アプリケーション層', 'ユーザーインターフェース層'].map((category) => (
                 <option key={category} value={category}>{category}</option>
               ))}
             </select>

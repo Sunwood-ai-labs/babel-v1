@@ -2,28 +2,35 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useTranslation } from 'next-i18next';
 import { Dna, Sunrise, Zap, Settings, BarChart2, Code, Users, Briefcase, Globe, Cloud, Package, List, CreditCard, FileText, MessageSquare, Share2, GitBranch, CheckSquare, Vote, PieChart, Terminal, Edit, Home, Menu, X } from 'lucide-react';
 import DynamicComponent from '@/components/DynamicComponent';
 
 export default function HomePage() {
   const { t } = useTranslation();
+  const router = useRouter();
   const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const sidebarComponents = {
     'システム開発': [
-      { name: 'VersionControl', displayName: '開発エディタ', icon: <Dna size={18} />, isActive: true },
-      { name: 'SaaSList', displayName: 'システムリスト', icon: <Cloud size={18} />, isActive: true },
-      { name: 'PackageList', displayName: 'アーティファクト', icon: <Package size={18} />, isActive: true },
+      { name: 'VersionControl', displayName: '開発エディタ', icon: <Dna size={18} />, isActive: true, path: '/development/editor' },
+      { name: 'SaaSList', displayName: 'システムリスト', icon: <Cloud size={18} />, isActive: true, path: '/development/systems' },
+      { name: 'PackageList', displayName: 'アーティファクト', icon: <Package size={18} />, isActive: true, path: '/development/artifacts' },
     ],
     'コミュニケーション': [
-      { name: 'ChatInterface', displayName: 'チャットインターフェース', icon: <MessageSquare size={18} />, isActive: true },
+      { name: 'ChatInterface', displayName: 'チャットインターフェース', icon: <MessageSquare size={18} />, isActive: true, path: '/communication/chat' },
     ],
   };
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const handleComponentSelect = (componentName: string, path: string) => {
+    setSelectedComponent(componentName);
+    router.push(path);
   };
 
   return (
@@ -43,7 +50,7 @@ export default function HomePage() {
                 </div>
               </h1>
               <p className="text-3xl font-light mb-16 animate-fade-in-up text-amber-100" style={{fontFamily: 'Noto Serif JP, serif'}}>
-                言語を超え、文化をつなぐ。新たな世界の創造へ。
+                言語を超え、文化をつなぐ。新たな���界の創造へ。
               </p>
               <div className="flex justify-center space-x-8 animate-fade-in">
                 <a href="https://github.com/dai-motoki/babel-v1" target="_blank" rel="noopener noreferrer" className="bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold py-4 px-8 rounded-full transition duration-300 ease-in-out transform hover:scale-105 text-xl inline-block" style={{fontFamily: 'Noto Sans JP, sans-serif'}}>
@@ -66,7 +73,7 @@ export default function HomePage() {
                       <div 
                         key={item.name} 
                         className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl shadow-2xl p-8 hover:shadow-amber-500/20 transition-all duration-300 cursor-pointer transform hover:-translate-y-2 relative"
-                        onClick={() => setSelectedComponent(item.name)}
+                        onClick={() => handleComponentSelect(item.name, item.path)}
                       >
                         <div className="flex items-center mb-6">
                           <div className="bg-amber-500 p-4 rounded-full mr-4">
@@ -113,7 +120,10 @@ export default function HomePage() {
             {isSidebarOpen ? (
               <div className="p-4">
                 <button
-                  onClick={() => setSelectedComponent(null)}
+                  onClick={() => {
+                    setSelectedComponent(null);
+                    router.push('/');
+                  }}
                   className="flex items-center w-full text-left px-6 py-4 hover:bg-gray-700 transition-colors duration-200 mb-4 rounded-lg shadow-md"
                 >
                   <Home size={18} />
@@ -126,7 +136,7 @@ export default function HomePage() {
                       {items.map((item) => (
                         <li key={item.name} className="mb-2 relative">
                           <button
-                            onClick={() => setSelectedComponent(item.name)}
+                            onClick={() => handleComponentSelect(item.name, item.path)}
                             className="flex items-center w-full text-left px-3 py-2 rounded-lg hover:bg-gray-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-amber-400"
                           >
                             {React.cloneElement(item.icon, { className: "text-amber-400" })}
@@ -142,7 +152,10 @@ export default function HomePage() {
             ) : (
               <div className="py-4">
                 <button
-                  onClick={() => setSelectedComponent(null)}
+                  onClick={() => {
+                    setSelectedComponent(null);
+                    router.push('/');
+                  }}
                   className="flex justify-center w-full py-4 hover:bg-gray-700 transition-colors duration-200 mb-4 rounded-full shadow-md"
                   title={t('塔の基礎に戻る')}
                 >
@@ -153,7 +166,7 @@ export default function HomePage() {
                     {items.map((item) => (
                       <div key={item.name} className="relative mb-3">
                         <button
-                          onClick={() => setSelectedComponent(item.name)}
+                          onClick={() => handleComponentSelect(item.name, item.path)}
                           className="flex justify-center w-full py-3 hover:bg-gray-700 transition-colors duration-200 rounded-full"
                           title={t(item.displayName)}
                         >
