@@ -134,7 +134,7 @@ export const FileStructure = React.memo(({ onNodeClick, selectedSystem }) => {
 
   const [highlightedNodeGroups, setHighlightedNodeGroups] = useLocalStorage<HighlightedGroup[]>(
     `highlightedNodeGroups_${selectedSystem}`,
-    [{ id: 1, name: 'グ���ープ1', nodes: [] }]
+    [{ id: 1, name: 'グループ1', nodes: [] }]
   );
 
   const addNewHighlightGroup = useCallback(() => {
@@ -357,6 +357,10 @@ export const FileStructure = React.memo(({ onNodeClick, selectedSystem }) => {
     return inside;
   };
 
+  const [duplicatedNodes, setDuplicatedNodes] = useState([]);
+  const [isDraggingDuplicates, setIsDraggingDuplicates] = useState(false);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+
   const handleSelectionAction = (action) => {
     switch (action) {
       case 'highlight':
@@ -392,12 +396,62 @@ export const FileStructure = React.memo(({ onNodeClick, selectedSystem }) => {
       case 'showEditor':
         selectedNodesInPath.forEach(node => showEditor(node));
         break;
+      case 'duplicate':
+        const newDuplicatedNodes = selectedNodesInPath.map(node => ({
+          ...node,
+          id: `${node.id}_copy`,
+          name: `${node.name} (コピー)`,
+          x: node.x + 20,
+          y: node.y + 20,
+          isDuplicated: true,
+        }));
+        setFilteredNodes(prevNodes => [...prevNodes, ...newDuplicatedNodes]);
+        setDuplicatedNodes(newDuplicatedNodes);
+        setIsDraggingDuplicates(true);
+        break;
+      case 'delete':
+        if (window.confirm(t('選択したノードを削除してもよろしいですか？'))) {
+          setFilteredNodes(prevNodes => prevNodes.filter(node => !selectedNodesInPath.some(selectedNode => selectedNode.id === node.id)));
+          setFilteredLinks(prevLinks => prevLinks.filter(link => 
+            !selectedNodesInPath.some(selectedNode => selectedNode.id === link.source.id || selectedNode.id === link.target.id)
+          ));
+        }
+        break;
       default:
         console.log(`Action ${action} not implemented for selection`);
     }
     setSelectedNodesInPath([]);
     setSelectionPath([]);
   };
+
+  const handleMouseMove = useCallback((event) => {
+    if (isDraggingDuplicates) {
+      const { movementX, movementY } = event;
+      setDragOffset(prev => ({ x: prev.x + movementX, y: prev.y + movementY }));
+      setFilteredNodes(prevNodes => prevNodes.map(node => 
+        duplicatedNodes.some(dn => dn.id === node.id)
+          ? { ...node, x: node.x + movementX, y: node.y + movementY }
+          : node
+      ));
+    }
+  }, [isDraggingDuplicates, duplicatedNodes]);
+
+  const handleMouseUp = useCallback(() => {
+    if (isDraggingDuplicates) {
+      setIsDraggingDuplicates(false);
+      setDuplicatedNodes([]);
+      setDragOffset({ x: 0, y: 0 });
+    }
+  }, [isDraggingDuplicates]);
+
+  useEffect(() => {
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [handleMouseMove, handleMouseUp]);
 
   const forceGraphConfig = useMemo(() => ({
     graphData: { nodes: filteredNodes, links: filteredLinks },
@@ -427,7 +481,7 @@ export const FileStructure = React.memo(({ onNodeClick, selectedSystem }) => {
           
           // ハイライトされたノードグループに属しているかチェック
           if (highlightedNodeGroups.some(group => group.nodes.some(n => n.id === node.id && n.isSelected))) {
-            // ハイライトされたノードの場合、��色のグラデーションを設定
+            // ハイライトされたノードの場合、色のグラデーションを設定
             gradient.addColorStop(0, `rgba(255, 255, 255, ${0.9 + Math.sin(time * 1.5) * 0.1})`);
             gradient.addColorStop(0.5, `rgba(255, 255, 255, ${0.7 + Math.sin(time * 1.5) * 0.1})`);
             gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
@@ -478,6 +532,15 @@ export const FileStructure = React.memo(({ onNodeClick, selectedSystem }) => {
       }
 
       node.__bckgDimensions = bckgDimensions;
+
+      // 複製されたノードの強調表示
+      if (node.isDuplicated) {
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, 10, 0, 2 * Math.PI);
+        ctx.strokeStyle = 'rgba(255, 0, 0, 0.8)';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+      }
     },
     linkWidth: 2,
     linkDirectionalParticles: 2,
@@ -491,10 +554,12 @@ export const FileStructure = React.memo(({ onNodeClick, selectedSystem }) => {
     cooldownTime: 15000,
     width: 1300,
     height: 600,
-    enableNodeDrag: !isSelectionMode,
+    enableNodeDrag: !isDraggingDuplicates,
     enablePanInteraction: !isSelectionMode,
     enableZoomInteraction: !isSelectionMode,
-  }), [getNodeColor, handleClick, selectedNodes, filteredNodes, filteredLinks, showFileNames, highlightedNodeGroups, selectedNodesInPath, isSelectionMode]);
+    onNodeDrag: null,
+    onNodeDragEnd: null,
+  }), [getNodeColor, handleClick, selectedNodes, filteredNodes, filteredLinks, showFileNames, highlightedNodeGroups, selectedNodesInPath, isSelectionMode, isDraggingDuplicates]);
 
   const forceGraph3DConfig = {
     ...forceGraphConfig,
@@ -542,7 +607,10 @@ export const FileStructure = React.memo(({ onNodeClick, selectedSystem }) => {
   }
 
   return (
-    <div className="h-full border border-[#3c3c3c] rounded-md overflow-hidden bg-[#1e1e1e] flex flex-col relative">
+    <div 
+      className="h-full border border-[#3c3c3c] rounded-md overflow-hidden bg-[#1e1e1e] flex flex-col relative"
+      style={{ cursor: isDraggingDuplicates ? 'move' : 'default' }}
+    >
 
 
       <ControlPanel
