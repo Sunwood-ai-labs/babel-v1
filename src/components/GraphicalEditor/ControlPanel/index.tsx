@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { MousePointer, Box, Play, Text } from 'lucide-react';
+import { MousePointer, Box, Play, Text, Lasso } from 'lucide-react';
 import Button from '@/components/common/Button';
 import SearchBar from '../SearchBar';
 
@@ -36,7 +36,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
     <div className="flex items-center justify-end p-3">
       <div className="flex space-x-2">
         <SearchBar onSearch={onSearch} />
-        <Button onClick={showAll}>{t('全て表示')}</Button>
+        <Button onClick={showAll}>{t('ALL')}</Button>
 
 
         <Button onClick={() => setShowFileNames(!showFileNames)}>
@@ -49,13 +49,13 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
 
 
         <Button onClick={toggleSelectionMode} className={isSelectionMode ? 'bg-blue-500' : ''}>
-          <MousePointer className="w-4 h-4 mr-2" />
-          {isSelectionMode ? t('選択モード: ON') : t('選択モード: OFF')}
+          <Lasso className="w-4 h-4 mr-2" />
+          {/* {isSelectionMode ? t('選択モード: ON') : t('選択モード: OFF')} */}
         </Button>
 
         <Button onClick={toggle2D3D} aria-label={is3D ? "2Dビューに切り替え" : "3Dビューに切り替え"}>
           <Box className="w-4 h-4 mr-2" />
-          {is3D ? "2D" : "3D"}
+          {/* {is3D ? "2D" : "3D"} */}
         </Button>
       </div>
     </div>
