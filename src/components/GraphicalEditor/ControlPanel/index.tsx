@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { MousePointer, Box, Play, Text, Lasso, Folder } from 'lucide-react';
@@ -11,6 +10,8 @@ interface ControlPanelProps {
   showAll: () => void;
   showFileNames: boolean;
   setShowFileNames: (show: boolean) => void;
+  showDirectoryNames: boolean;
+  setShowDirectoryNames: (show: boolean) => void;
   isSelectionMode: boolean;
   toggleSelectionMode: () => void;
   is3D: boolean;

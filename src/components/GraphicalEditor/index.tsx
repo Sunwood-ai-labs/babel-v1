@@ -460,13 +460,13 @@ export const FileStructure = React.memo(({ onNodeClick, selectedSystem }) => {
     nodeAutoColorBy: getNodeColor,
     nodeCanvasObject: (node, ctx, globalScale) => {
       const label = node.name;
-      const fontSize = node.type === 'directory' ? 14/globalScale : 12/globalScale;
+      const fontSize = node.type === 'directory' ? 10/globalScale : 8/globalScale;
       ctx.font = `${fontSize}px Sans-Serif`;
       const textWidth = ctx.measureText(label).width;
       const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2);
 
       ctx.beginPath();
-      ctx.arc(node.x, node.y, node.type === 'directory' ? 6 : 4, 0, 2 * Math.PI);
+      ctx.arc(node.x, node.y, node.type === 'directory' ? 4 : 3, 0, 2 * Math.PI);
       ctx.fillStyle = getNodeColor(node);
       ctx.fill();
 
@@ -497,7 +497,7 @@ export const FileStructure = React.memo(({ onNodeClick, selectedSystem }) => {
             gradient.addColorStop(0.5, `rgba(100, 150, 180, ${0.25 + Math.sin(time * 1.5) * 0.1})`);
             gradient.addColorStop(1, 'rgba(100, 150, 180, 0)');
           } else if (selectedNodesInPath.some(n => n.id === node.id)) {
-            // 選択されたパス上のノードの場合��赤色のグラデーションを設定
+            // 選択されたパス上のノードの場合、赤色のグラデーションを設定
             gradient.addColorStop(0, `rgba(255, 0, 0, ${0.8 + Math.sin(time * 1.5) * 0.2})`);
             gradient.addColorStop(0.5, `rgba(255, 0, 0, ${0.4 + Math.sin(time * 1.5) * 0.1})`);
             gradient.addColorStop(1, 'rgba(255, 0, 0, 0)');
@@ -514,7 +514,7 @@ export const FileStructure = React.memo(({ onNodeClick, selectedSystem }) => {
         }
 
         ctx.beginPath();
-        const circleRadius = node.type === 'directory' ? 6 : 4;
+        const circleRadius = node.type === 'directory' ? 4 : 3;
         ctx.arc(node.x, node.y, circleRadius, 0, 2 * Math.PI);
         ctx.strokeStyle = highlightedNodeGroups.some(group => group.nodes.some(n => n.id === node.id && n.isSelected)) ? 'rgba(255, 255, 255, 1)' : 
                           node.name === 'meta' ? 'rgba(255, 215, 0, 0.8)' : 
@@ -528,8 +528,8 @@ export const FileStructure = React.memo(({ onNodeClick, selectedSystem }) => {
       if ((showFileNames && node.type !== 'directory') || (showDirectoryNames && node.type === 'directory')) {
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillStyle = 'rgba(255, 255, 255, 1)';
-        ctx.fillText(label, node.x, node.y + fontSize * 1.5);
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+        ctx.fillText(label, node.x, node.y + fontSize);
       }
 
       node.__bckgDimensions = bckgDimensions;
@@ -693,7 +693,7 @@ export const FileStructure = React.memo(({ onNodeClick, selectedSystem }) => {
           <Draggable handle=".preview-handle">
             <div className="w-1/2 border-l border-[#3c3c3c] flex flex-col">
               <div className="p-2 bg-[#252526] text-[#d4d4d4] flex justify-between items-center preview-handle cursor-move">
-                <span>プレビュー: localhost:3001</span>
+                <span>プレビュー: localhost:3000</span>
                 <button
                   onClick={() => setShowPreview(false)}
                   className="text-[#d4d4d4] hover:text-white"
@@ -703,9 +703,9 @@ export const FileStructure = React.memo(({ onNodeClick, selectedSystem }) => {
               </div>
               <div className="relative w-full flex-grow overflow-hidden">
                 <iframe
-                  src="http://localhost:3001"
+                  src="http://localhost:3000"
                   className="absolute top-1/2 left-1/2 w-[133.33%] h-[133.33%] transform -translate-x-1/2 -translate-y-1/2 scale-75"
-                  title="localhost:3001 プレビュー"
+                  title="localhost:3000 プレビュー"
                 />
               </div>
             </div>
