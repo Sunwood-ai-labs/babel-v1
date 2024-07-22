@@ -638,7 +638,7 @@ export const FileStructure = React.memo(({ onNodeClick, selectedSystem }) => {
     />
       <RecentChanges changes={changes} fileHistory={fileHistory} />
       <div className="flex-grow flex">
-        <div className="w-3/4 flex flex-col">
+        <div className={`${showPreview ? 'w-1/2' : 'w-full'} flex flex-col`}>
 
           {selectedNodes.map((node) => (
             <MockEditor
@@ -687,9 +687,9 @@ export const FileStructure = React.memo(({ onNodeClick, selectedSystem }) => {
 
         </div>
         {showPreview && (
-          <Draggable>
+          <Draggable handle=".preview-handle">
             <div className="w-1/2 border-l border-[#3c3c3c] flex flex-col">
-              <div className="p-2 bg-[#252526] text-[#d4d4d4] flex justify-between items-center">
+              <div className="p-2 bg-[#252526] text-[#d4d4d4] flex justify-between items-center preview-handle cursor-move">
                 <span>プレビュー: localhost:3001</span>
                 <button
                   onClick={() => setShowPreview(false)}
@@ -698,11 +698,13 @@ export const FileStructure = React.memo(({ onNodeClick, selectedSystem }) => {
                   ✕
                 </button>
               </div>
-              <iframe
-                src="http://localhost:3001"
-                className="flex-grow w-full"
-                title="localhost:3001 プレビュー"
-              />
+              <div className="relative w-full flex-grow overflow-hidden">
+                <iframe
+                  src="http://localhost:3001"
+                  className="absolute top-1/2 left-1/2 w-[133.33%] h-[133.33%] transform -translate-x-1/2 -translate-y-1/2 scale-75"
+                  title="localhost:3001 プレビュー"
+                />
+              </div>
             </div>
           </Draggable>
         )}
