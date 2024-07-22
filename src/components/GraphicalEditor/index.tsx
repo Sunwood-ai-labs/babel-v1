@@ -625,17 +625,17 @@ export const FileStructure = React.memo(({ onNodeClick, selectedSystem }) => {
       />
 
 
-<HighlightedGroups
-  highlightedNodeGroups={highlightedNodeGroups}
-  selectedGroupId={selectedGroupId}
-  setSelectedGroupId={setSelectedGroupId}
-  addNewHighlightGroup={addNewHighlightGroup}
-  editGroupName={editGroupName}
-  toggleGroupHighlight={toggleGroupHighlight}
-  removeHighlightGroup={removeHighlightGroup}
-  highlightNode={highlightNode}
-  selectedSystem={selectedSystem}
-/>
+    <HighlightedGroups
+      highlightedNodeGroups={highlightedNodeGroups}
+      selectedGroupId={selectedGroupId}
+      setSelectedGroupId={setSelectedGroupId}
+      addNewHighlightGroup={addNewHighlightGroup}
+      editGroupName={editGroupName}
+      toggleGroupHighlight={toggleGroupHighlight}
+      removeHighlightGroup={removeHighlightGroup}
+      highlightNode={highlightNode}
+      selectedSystem={selectedSystem}
+    />
       <RecentChanges changes={changes} fileHistory={fileHistory} />
       <div className="flex-grow flex">
         <div className="w-3/4 flex flex-col">
@@ -688,9 +688,9 @@ export const FileStructure = React.memo(({ onNodeClick, selectedSystem }) => {
         </div>
         {showPreview && (
           <Draggable>
-            <div className="w-1/4 border-l border-[#3c3c3c] flex flex-col">
+            <div className="w-1/2 border-l border-[#3c3c3c] flex flex-col">
               <div className="p-2 bg-[#252526] text-[#d4d4d4] flex justify-between items-center">
-                <span>プレビュー: localhost:3000</span>
+                <span>プレビュー: localhost:3001</span>
                 <button
                   onClick={() => setShowPreview(false)}
                   className="text-[#d4d4d4] hover:text-white"
@@ -699,9 +699,9 @@ export const FileStructure = React.memo(({ onNodeClick, selectedSystem }) => {
                 </button>
               </div>
               <iframe
-                src="http://localhost:3000"
+                src="http://localhost:3001"
                 className="flex-grow w-full"
-                title="localhost:3000 プレビュー"
+                title="localhost:3001 プレビュー"
               />
             </div>
           </Draggable>
