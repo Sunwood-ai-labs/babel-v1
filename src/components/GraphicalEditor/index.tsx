@@ -78,6 +78,7 @@ export const FileStructure = React.memo(({ onNodeClick, selectedSystem }) => {
   const [filteredNodes, setFilteredNodes] = useState([]);
   const [filteredLinks, setFilteredLinks] = useState([]);
   const [showFileNames, setShowFileNames] = useState(false);
+  const [showDirectoryNames, setShowDirectoryNames] = useState(false);
   const [clickedNode, setClickedNode] = useState(null);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
   const [isSelectionMode, setIsSelectionMode] = useState(false);
@@ -496,7 +497,7 @@ export const FileStructure = React.memo(({ onNodeClick, selectedSystem }) => {
             gradient.addColorStop(0.5, `rgba(100, 150, 180, ${0.25 + Math.sin(time * 1.5) * 0.1})`);
             gradient.addColorStop(1, 'rgba(100, 150, 180, 0)');
           } else if (selectedNodesInPath.some(n => n.id === node.id)) {
-            // 選択されたパス上のノードの場合、赤色のグラデーションを設定
+            // 選択されたパス上のノードの場合��赤色のグラデーションを設定
             gradient.addColorStop(0, `rgba(255, 0, 0, ${0.8 + Math.sin(time * 1.5) * 0.2})`);
             gradient.addColorStop(0.5, `rgba(255, 0, 0, ${0.4 + Math.sin(time * 1.5) * 0.1})`);
             gradient.addColorStop(1, 'rgba(255, 0, 0, 0)');
@@ -524,7 +525,7 @@ export const FileStructure = React.memo(({ onNodeClick, selectedSystem }) => {
         ctx.stroke();
       }
 
-      if (showFileNames) {
+      if ((showFileNames && node.type !== 'directory') || (showDirectoryNames && node.type === 'directory')) {
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillStyle = 'rgba(255, 255, 255, 1)';
@@ -559,7 +560,7 @@ export const FileStructure = React.memo(({ onNodeClick, selectedSystem }) => {
     enableZoomInteraction: !isSelectionMode,
     onNodeDrag: null,
     onNodeDragEnd: null,
-  }), [getNodeColor, handleClick, selectedNodes, filteredNodes, filteredLinks, showFileNames, highlightedNodeGroups, selectedNodesInPath, isSelectionMode, isDraggingDuplicates]);
+  }), [getNodeColor, handleClick, selectedNodes, filteredNodes, filteredLinks, showFileNames, showDirectoryNames, highlightedNodeGroups, selectedNodesInPath, isSelectionMode, isDraggingDuplicates]);
 
   const forceGraph3DConfig = {
     ...forceGraphConfig,
@@ -618,6 +619,8 @@ export const FileStructure = React.memo(({ onNodeClick, selectedSystem }) => {
         showAll={showAll}
         showFileNames={showFileNames}
         setShowFileNames={setShowFileNames}
+        showDirectoryNames={showDirectoryNames}
+        setShowDirectoryNames={setShowDirectoryNames}
         isSelectionMode={isSelectionMode}
         toggleSelectionMode={toggleSelectionMode}
         is3D={is3D}

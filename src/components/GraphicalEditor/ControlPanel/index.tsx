@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { MousePointer, Box, Play, Text, Lasso } from 'lucide-react';
+import { MousePointer, Box, Play, Text, Lasso, Folder } from 'lucide-react';
 import Button from '@/components/common/Button';
 import SearchBar from '../SearchBar';
 
@@ -24,6 +24,8 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   showAll,
   showFileNames,
   setShowFileNames,
+  showDirectoryNames,
+  setShowDirectoryNames,
   isSelectionMode,
   toggleSelectionMode,
   is3D,
@@ -38,15 +40,17 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
         <SearchBar onSearch={onSearch} />
         <Button onClick={showAll}>{t('ALL')}</Button>
 
-
         <Button onClick={() => setShowFileNames(!showFileNames)}>
           <Text className="w-4 h-4" />
+        </Button>
+
+        <Button onClick={() => setShowDirectoryNames(!showDirectoryNames)}>
+          <Folder className="w-4 h-4" />
         </Button>
 
         {/* <Button onClick={() => setShowFileNames(!showFileNames)}>
           {showFileNames ? t('ファイル名を非表示') : t('ファイル名を表示')}
         </Button> */}
-
 
         <Button onClick={toggleSelectionMode} className={isSelectionMode ? 'bg-blue-500' : ''}>
           <Lasso className="w-4 h-4 mr-2" />
