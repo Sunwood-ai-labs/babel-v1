@@ -1,0 +1,81 @@
+/* CollaborationHub.css */
+
+/* チャットインターフェース */
+.chat-container {
+  @apply bg-gray-100 rounded-lg shadow-md p-4 mb-6;
+}
+
+.chat-message {
+  @apply mb-4 p-3 rounded-lg;
+}
+
+.chat-message-sent {
+  @apply bg-blue-100 text-blue-800 ml-auto;
+}
+
+.chat-message-received {
+  @apply bg-white text-gray-800;
+}
+
+.chat-input {
+  @apply w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400;
+}
+
+/* Markdownエディタ */
+.markdown-editor {
+  @apply bg-white rounded-lg shadow-md p-4;
+}
+
+.markdown-preview {
+  @apply bg-gray-50 rounded-lg p-4 mt-4;
+}
+
+/* ファイル共有 */
+.file-sharing {
+  @apply bg-white rounded-lg shadow-md p-4;
+}
+
+.file-list {
+  @apply divide-y divide-gray-200;
+}
+
+.file-item {
+  @apply py-3 flex items-center justify-between;
+}
+
+.file-name {
+  @apply text-sm font-medium text-gray-900;
+}
+
+.file-actions {
+  @apply flex space-x-2;
+}
+
+/* 和風モダンな要素 */
+.japanese-pattern {
+  background-image: url('data:image/svg+xml,%3Csvg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="%239C92AC" fill-opacity="0.4" fill-rule="evenodd"%3E%3Cpath d="M0 40L40 0H20L0 20M40 40V20L20 40"/%3E%3C/g%3E%3C/svg%3E');
+  @apply bg-opacity-10;
+}
+
+.japanese-border {
+  @apply border-2 border-gray-300 rounded-lg;
+  background-image: repeating-linear-gradient(45deg, #f0f0f0 0, #f0f0f0 1px, transparent 0, transparent 50%);
+  background-size: 10px 10px;
+}
+
+/* アニメーション */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* レスポンシブデザイン */
+@media (max-width: 640px) {
+  .chat-container, .markdown-editor, .file-sharing {
+    @apply p-2;
+  }
+}

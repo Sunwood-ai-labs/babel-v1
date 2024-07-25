@@ -1,0 +1,122 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+.ide-container {
+  @apply flex flex-col h-screen bg-gray-100;
+}
+
+.ide-header {
+  @apply bg-indigo-700 text-white p-4 flex justify-between items-center;
+}
+
+.ide-header h1 {
+  @apply text-2xl font-semibold font-japanese;
+}
+
+.ide-main {
+  @apply flex flex-1 overflow-hidden;
+}
+
+.ide-sidebar {
+  @apply w-64 bg-white border-r border-gray-200 overflow-y-auto;
+}
+
+.ide-content {
+  @apply flex-1 flex flex-col;
+}
+
+.monaco-editor {
+  @apply flex-1 overflow-hidden;
+}
+
+.ide-footer {
+  @apply bg-gray-200 p-2 text-sm text-gray-600 flex justify-between items-center;
+}
+
+.file-explorer {
+  @apply p-4;
+}
+
+.file-explorer-header {
+  @apply text-lg font-semibold mb-2 text-gray-700;
+}
+
+.file-tree {
+  @apply text-sm;
+}
+
+.file-tree-item {
+  @apply flex items-center py-1 px-2 hover:bg-gray-100 rounded cursor-pointer;
+}
+
+.file-icon {
+  @apply mr-2 text-gray-500;
+}
+
+.output-console {
+  @apply bg-gray-800 text-white p-4 h-40 overflow-y-auto font-mono text-sm;
+}
+
+.toolbar {
+  @apply flex items-center space-x-2 p-2 bg-gray-200;
+}
+
+.toolbar-button {
+  @apply px-3 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition duration-150 ease-in-out;
+}
+
+.settings-panel {
+  @apply bg-white p-4 border-l border-gray-200 w-64 overflow-y-auto;
+}
+
+.settings-header {
+  @apply text-lg font-semibold mb-4 text-gray-700;
+}
+
+.settings-group {
+  @apply mb-4;
+}
+
+.settings-group-title {
+  @apply text-sm font-medium text-gray-600 mb-2;
+}
+
+.settings-item {
+  @apply flex items-center justify-between py-2;
+}
+
+.settings-label {
+  @apply text-sm text-gray-700;
+}
+
+.settings-input {
+  @apply w-32 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500;
+}
+
+.settings-select {
+  @apply w-32 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500;
+}
+
+/* 和風モダンなスタイル */
+.japanese-pattern {
+  background-color: #f0f0f0;
+  background-image: 
+    linear-gradient(45deg, #e0e0e0 25%, transparent 25%),
+    linear-gradient(-45deg, #e0e0e0 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #e0e0e0 75%),
+    linear-gradient(-45deg, transparent 75%, #e0e0e0 75%);
+  background-size: 20px 20px;
+}
+
+.japanese-border {
+  @apply border-2 border-gray-300 rounded-lg shadow-md;
+}
+
+.japanese-button {
+  @apply bg-red-600 text-white font-semibold py-2 px-4 rounded-full shadow-md hover:bg-red-700 transition duration-300 ease-in-out;
+}
+
+.japanese-input {
+  @apply border-b-2 border-gray-400 focus:border-indigo-500 transition duration-300 ease-in-out;
+}

@@ -1,0 +1,103 @@
+/* SaaSPackageManager.css */
+
+/* 全体のコンテナ */
+.saas-package-container {
+  @apply bg-gray-100 min-h-screen p-8 font-sans;
+}
+
+/* セクションタイトル */
+.section-title {
+  @apply text-3xl font-bold mb-6 text-gray-800 border-b-2 border-indigo-500 pb-2;
+}
+
+/* カード共通スタイル */
+.card {
+  @apply bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 ease-in-out hover:shadow-lg hover:scale-105;
+}
+
+/* カードグリッド */
+.card-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6;
+}
+
+/* カードヘッダー */
+.card-header {
+  @apply bg-indigo-50 p-4 border-b border-indigo-100;
+}
+
+/* カードタイトル */
+.card-title {
+  @apply text-xl font-semibold text-indigo-800;
+}
+
+/* カードコンテンツ */
+.card-content {
+  @apply p-4;
+}
+
+/* カードフッター */
+.card-footer {
+  @apply bg-gray-50 p-4 flex justify-between items-center;
+}
+
+/* ボタン共通スタイル */
+.btn {
+  @apply px-4 py-2 rounded-full text-sm font-medium transition-colors duration-300 ease-in-out;
+}
+
+/* プライマリボタン */
+.btn-primary {
+  @apply bg-indigo-500 text-white hover:bg-indigo-600;
+}
+
+/* セカンダリボタン */
+.btn-secondary {
+  @apply bg-gray-200 text-gray-700 hover:bg-gray-300;
+}
+
+/* 検索バー */
+.search-bar {
+  @apply w-full mb-6 flex;
+}
+
+.search-input {
+  @apply flex-grow p-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-indigo-500;
+}
+
+.search-button {
+  @apply bg-indigo-500 text-white p-2 rounded-r-lg hover:bg-indigo-600 transition-colors duration-300 ease-in-out;
+}
+
+/* カテゴリフィルター */
+.category-filter {
+  @apply mb-6 flex flex-wrap gap-2;
+}
+
+.category-tag {
+  @apply bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm cursor-pointer hover:bg-indigo-100 transition-colors duration-300 ease-in-out;
+}
+
+.category-tag.active {
+  @apply bg-indigo-500 text-white;
+}
+
+/* 和風モダン要素 */
+.japanese-pattern {
+  @apply bg-repeat-x h-4 w-full;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path d="M0 10 L10 0 L20 10 L10 20 Z" fill="%234F46E5" opacity="0.1"/></svg>');
+}
+
+.japanese-divider {
+  @apply my-8 border-t-2 border-indigo-200;
+}
+
+/* レスポンシブデザイン */
+@media (max-width: 640px) {
+  .card-grid {
+    @apply grid-cols-1;
+  }
+  
+  .section-title {
+    @apply text-2xl;
+  }
+}

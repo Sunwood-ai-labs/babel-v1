@@ -1,0 +1,87 @@
+/* ProjectDashboard.css */
+
+/* 全体のコンテナスタイル */
+.dashboard-container {
+  @apply bg-gray-100 min-h-screen p-6 font-sans;
+}
+
+/* セクションタイトル */
+.section-title {
+  @apply text-2xl font-bold mb-4 text-gray-800 border-b-2 border-indigo-500 pb-2;
+}
+
+/* カードスタイル */
+.card {
+  @apply bg-white rounded-lg shadow-md p-6 mb-6 transition-all duration-300 hover:shadow-lg;
+}
+
+/* バージョン管理セクション */
+.version-control {
+  @apply space-y-4;
+}
+
+.commit-list {
+  @apply divide-y divide-gray-200;
+}
+
+.commit-item {
+  @apply py-3 flex items-center justify-between;
+}
+
+/* タスクボード */
+.task-board {
+  @apply grid grid-cols-1 md:grid-cols-3 gap-6;
+}
+
+.task-column {
+  @apply bg-gray-50 rounded-lg p-4;
+}
+
+.task-item {
+  @apply bg-white rounded-md p-3 mb-2 shadow-sm cursor-move;
+}
+
+/* 優先順位投票 */
+.priority-voting {
+  @apply space-y-4;
+}
+
+.vote-item {
+  @apply flex items-center justify-between bg-white rounded-md p-4 shadow-sm;
+}
+
+.vote-button {
+  @apply px-4 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 transition-colors duration-200;
+}
+
+/* 進捗チャート */
+.progress-chart {
+  @apply h-64 bg-white rounded-lg shadow-md p-4;
+}
+
+/* 和風モダンな要素 */
+.japanese-pattern {
+  background-color: #f9f9f9;
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23e0e0e0' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 20L20 0v20H0zm40 0L20 0v20h20zM0 40l20-20v20H0zm40 0l-20-20v20h20z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.japanese-border {
+  @apply border-2 border-indigo-500 rounded-md;
+}
+
+/* レスポンシブデザイン */
+@media (max-width: 768px) {
+  .task-board {
+    @apply grid-cols-1;
+  }
+}
+
+/* アニメーション */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-in-out;
+}

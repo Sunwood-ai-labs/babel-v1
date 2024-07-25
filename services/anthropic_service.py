@@ -13,7 +13,7 @@ async def generate_text_anthropic(prompt: str):
             anthropic_client.messages.create,
             model="claude-3-5-sonnet-20240620",
             max_tokens=8192,
-            temperature=1,
+            temperature=0.7,
             messages=[
                 {"role": "user", "content": prompt}
             ],
