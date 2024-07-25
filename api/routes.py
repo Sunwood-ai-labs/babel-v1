@@ -138,7 +138,7 @@ async def create_new_system(name: str):
     
     
     # ../grimoires/temp/ディレクトリの内容をコピー XXX Grimoires は一旦選べるように、のちに自然言語からマッチングするように。
-    temp_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'grimoires', 'temp')
+    temp_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'grimoires', 'temp')
     if os.path.exists(temp_dir):
         for item in os.listdir(temp_dir):
             s = os.path.join(temp_dir, item)
