@@ -26,6 +26,18 @@ cd babel-v1-backend
 
 2. バックエンドサーバーを起動します：
 
+
+事前に 
+
+以下AnthropicのAPIキーを設定してください。
+https://console.anthropic.com/settings/keys
+
+```sh
+export ANTHROPIC_API_KEY=sk-ant-xxxxx
+
+```
+
+
 以下２つは別のターミナルで立ち上げてください。
 ```bash
 uvicorn file_watcher:app --host 0.0.0.0 --port 8001 --reload
