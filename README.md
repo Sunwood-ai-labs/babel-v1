@@ -1,5 +1,7 @@
 # プロジェクト バベル
 
+![bigban_optimized_final](https://github.com/user-attachments/assets/b0d0e8aa-4702-45ac-9ee7-5e5a74a0a397)
+
 **注意** プロジェクト バベルは実験的なプロジェクトです。
 フロントエンドモックのみでバックエンドは未完成のものも多くあります。
 
@@ -8,23 +10,8 @@
 
 ### フロントエンドの立ち上げ
 
-フロントエンドは Next.js を使用しています。以下の手順で立ち上げることができます：
-
-1. プロジェクトのルートディレクトリに移動します。
-
-2. 必要な依存関係をインストールします：
-
-```bash
-npm install
-```
-
-3. 開発サーバーを起動します：
-
-```bash
-npm run dev
-```
-
-4. ブラウザで `http://localhost:3000` を開いて、アプリケーションを確認します。
+こちらのURLにアクセスしてください。
+→ https://babelv1.vercel.app/development/editor
 
 ### バックエンドの立ち上げ
 
@@ -33,24 +20,19 @@ npm run dev
 1. `src/backend` ディレクトリに移動します：
 
 ```bash
-cd src/backend
+git clone https://github.com/dai-motoki/babel-v1-backend.git
+cd babel-v1-backend
 ```
 
 2. バックエンドサーバーを起動します：
 
+以下２つは別のターミナルで立ち上げてください。
 ```bash
-uvicorn main:app --reload
 uvicorn file_watcher:app --host 0.0.0.0 --port 8001 --reload
+uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
-3. webソケットを起動します：
+4. バックエンドサーバーが `http://localhost:8000`, `http://localhost:8001` で起動します。
 
-```bash
-python file_watcher.py
-```
-
-4. バックエンドサーバーが `http://localhost:8000` で起動します。
-
-これらの手順を実行することで、フロントエンドとバックエンドの両方を立ち上げることができます。フロントエンドは3000番ポートで、バックエンドは8000番ポートで実行されます。
 
 注意：実際の環境設定や依存関係は、プロジェクトの具体的な構成によって異なる場合があります。必要に応じて、プロジェクトのREADMEファイルや設定ファイルを確認してください。
