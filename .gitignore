@@ -140,3 +140,4 @@ __pycache__
 
 .history/
 src/backend/file_service.log
+file_service.log
